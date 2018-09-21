@@ -40,6 +40,6 @@ USER $USER
 WORKDIR /home/$USER
 
 # set entrypoint
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/bin/bash", "--login"]

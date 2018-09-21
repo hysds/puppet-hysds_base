@@ -204,7 +204,7 @@ class hysds_base {
   easy_install { 'python-processing':
     name    => '/etc/puppet/modules/hysds_base/files/processing-0.39-py2.7-linux-x86_64.egg',
     ensure  => installed,
-    require => Easy_install['python-setuptools'],
+    require => Package['python-setuptools'],
   }
 
 

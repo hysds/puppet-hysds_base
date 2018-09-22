@@ -193,13 +193,6 @@ class hysds_base {
   # install home baked packages for sciflo and hysds
   #####################################################
 
-  package { 'hdfeos':
-    provider => rpm,
-    ensure   => present,
-    source   => "/etc/puppet/modules/hysds_base/files/hdfeos-2.19-1.x86_64.rpm",
-    notify   => Exec['ldconfig'],
-  }
-
   package { 'dbxml':
     provider => rpm,
     ensure   => present,
@@ -233,36 +226,6 @@ class hysds_base {
     require => Package['python-setuptools'],
   }
   
-  easy_install { 'python-numeric':
-    name    => '/etc/puppet/modules/hysds_base/files/Numeric-24.2-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Easy_install['python-pyxml'],
-  }
-
-  easy_install { 'python-hdfeos':
-    name    => '/etc/puppet/modules/hysds_base/files/hdfeos-0.5-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Easy_install['python-numeric'],
-  }
-
-  easy_install { 'python-polygon':
-    name    => '/etc/puppet/modules/hysds_base/files/Polygon-1.13-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Easy_install['python-hdfeos'],
-  }
-
-  easy_install { 'python-numarray':
-    name    => '/etc/puppet/modules/hysds_base/files/numarray-1.5.2-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Easy_install['python-polygon'],
-  }
-
-  easy_install { 'python-pyhdf':
-    name    => '/etc/puppet/modules/hysds_base/files/pyhdf-0.8.3-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Easy_install['python-numarray'],
-  }
-
   easy_install { 'python-processing':
     name    => '/etc/puppet/modules/hysds_base/files/processing-0.39-py2.7-linux-x86_64.egg',
     ensure  => installed,

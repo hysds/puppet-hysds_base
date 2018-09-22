@@ -133,6 +133,7 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
+    'm2crypto': ensure => installed;
     'python': ensure => present;
     'python-setuptools': ensure => present;
     'python2-pip': ensure => present;
@@ -147,6 +148,8 @@ class hysds_base {
     'python-twisted-core': ensure => installed;
     'python-twisted-web': ensure => installed;
     'python-twisted-words': ensure => installed;
+    'python-crypto': ensure => installed;
+    'python-paramiko': ensure => installed;
   }
 
 

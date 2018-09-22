@@ -111,7 +111,6 @@ class hysds_base {
 
   package {
     'sudo': ensure => installed;
-    'screen': ensure => installed;
     'bind-utils': ensure => installed;
     'curl': ensure => installed;
     'wget': ensure => installed;
@@ -119,7 +118,6 @@ class hysds_base {
     'nscd': ensure => installed;
     'chrony': ensure => installed;
     'git': ensure => installed;
-    'subversion': ensure => installed;
     'docker-ce': ensure => installed;
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;

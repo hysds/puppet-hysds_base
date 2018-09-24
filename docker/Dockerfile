@@ -1,7 +1,7 @@
 FROM docker.io/centos:7
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
-LABEL description "Base Centos7 image for HySDS"
+LABEL description "Base HySDS image"
 
 # Set gosu version
 ENV GOSU_VERSION 1.10

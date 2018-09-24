@@ -13,6 +13,9 @@ ENV GROUP ops
 # git url to hysds base puppet module
 ENV GIT_URL https://github.com/hysds/puppet-hysds_base/raw/master/install.sh
 
+# add latest repo version to invalidate cache
+ADD https://api.github.com/repos/hysds/puppet-hysds_base/git/refs/heads/master version.json
+
 # provision via puppet
 RUN set -ex \
  && yum install -y epel-release \

@@ -11,7 +11,7 @@ As _root_ run:
 bash < <(curl -skL https://github.com/hysds/puppet-hysds_base/raw/master/install.sh)
 ```
 
-## Build Docker image
+## Build Docker images based on CentOS and CUDA images
 ```
 ./build_docker.sh <tag>
 ```

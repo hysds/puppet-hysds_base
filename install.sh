@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <github org>"
-  echo "e.g.: $0 hysds"
-  echo "e.g.: $0 pymonger"
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <github org> <branch>"
+  echo "e.g.: $0 hysds master"
+  echo "e.g.: $0 pymonger python3"
   exit 1
 fi
 ORG=$1
+BRANCH=$2
 
 mods_dir=/etc/puppet/modules
 cd $mods_dir
@@ -69,7 +70,7 @@ site_pp=$mod_dir/site.pp
 
 # check that module is here; if not, export it
 if [ ! -d $mod_dir ]; then
-  $git_cmd clone $git_loc $mod_dir
+  $git_cmd clone --single-branch -b $BRANCH $git_loc $mod_dir
 fi
 
 

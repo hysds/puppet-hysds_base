@@ -238,32 +238,29 @@ class hysds_base {
   # install home baked packages for sciflo and hysds
   #####################################################
 
-  #package { 'dbxml':
-  #  provider => rpm,
-  #  ensure   => present,
-  #  source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.0.18-1.x86_64.rpm",
-  #  require  => Package['libxml2-python'],
-  #  notify   => Exec['ldconfig'],
-  #}
+  package { 'dbxml':
+    provider => rpm,
+    ensure   => present,
+    source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
+    require  => Package['libxml2-python'],
+    notify   => Exec['ldconfig'],
+  }
 
-  #easy_install { 'bsddb3':
-  #  name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.1.0-py2.7-linux-x86_64.egg',
-  #  ensure  => installed,
-  #  require => [
-  #              Package['python-setuptools'],
-  #              Package['dbxml'],
-  #             ],
-  #}
+  easy_install { 'bsddb3':
+    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-py3.7-linux-x86_64.egg',
+    ensure  => installed,
+    require => [
+                Package['dbxml'],
+               ],
+  }
 
-  #easy_install { 'python-dbxml':
-  #  name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.0.18-py2.7-linux-x86_64.egg',
-  #  ensure  => installed,
-  #  require => [
-  #              Package['python-setuptools'],
-  #              Package['dbxml'],
-  #              Easy_install['bsddb3'],
-  #             ],
-  #}
+  easy_install { 'python-dbxml':
+    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-py3.7-linux-x86_64.egg',
+    ensure  => installed,
+    require => [
+                Easy_install['bsddb3'],
+               ],
+  }
 
   #easy_install { 'python-pyxml':
   #  name    => '/etc/puppet/modules/hysds_base/files/PyXML-0.8.4-py2.7-linux-x86_64.egg',

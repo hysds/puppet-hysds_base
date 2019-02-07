@@ -242,7 +242,7 @@ class hysds_base {
     provider => rpm,
     ensure   => present,
     source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Package['libxml2-python'],
+    require  => Anaconda['clean'],
     notify   => Exec['ldconfig'],
   }
 

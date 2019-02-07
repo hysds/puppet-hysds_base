@@ -1,4 +1,13 @@
 #!/bin/bash
+set -e
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <github org>"
+  echo "e.g.: $0 hysds"
+  echo "e.g.: $0 pymonger"
+  exit 1
+fi
+ORG=$1
 
 mods_dir=/etc/puppet/modules
 cd $mods_dir
@@ -54,7 +63,7 @@ fi
 # export hysds_base puppet module
 ##########################################
 
-git_loc="${git_url}/hysds/puppet-hysds_base"
+git_loc="${git_url}/${ORG}/puppet-hysds_base"
 mod_dir=$mods_dir/hysds_base
 site_pp=$mod_dir/site.pp
 

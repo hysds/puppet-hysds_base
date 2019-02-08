@@ -153,6 +153,23 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
+#    'm2crypto': ensure => installed;
+#    'python': ensure => present;
+#    'python-setuptools': ensure => present;
+#    'python2-pip': ensure => present;
+#    'python-virtualenv': ensure => present;
+#    'libxml2-python': ensure => installed;
+#    'libxslt-python': ensure => installed;
+#    'python-pillow': ensure => installed;
+#    'python-formencode': ensure => installed;
+#    'python-sqlalchemy': ensure => installed;
+#    'python-sqlobject': ensure => installed;
+#    'SOAPpy': ensure => installed;
+#    'python-twisted-core': ensure => installed;
+#    'python-twisted-web': ensure => installed;
+#    'python-twisted-words': ensure => installed;
+#    'python-crypto': ensure => installed;
+#    'python-paramiko': ensure => installed;
   }
 
 
@@ -181,21 +198,28 @@ class hysds_base {
   anaconda { 'update_all':
     path    => $conda_path,
     action  => 'update',
-    args    => '--all --yes',
+    args    => '--all -y',
     require => Anaconda['config_show_channel_urls'],
   }
 
   anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
-    args    => '--yes virtualenv libxml2 libxslt',
+    args    => '-y virtualenv libxml2 libxslt',
     require => Anaconda['update_all'],
+  }
+
+  anaconda { 'm2crypto':
+    path    => $conda_path,
+    action  => 'install',
+    args    => '-y -c conda-forge m2crypto',
+    require => Anaconda['packages'],
   }
 
   anaconda { 'clean':
     path    => $conda_path,
     action  => 'clean',
-    require => Anaconda['packages'],
+    require => Anaconda['m2crypto'],
   }
   
 
@@ -259,6 +283,15 @@ class hysds_base {
     ensure  => installed,
     require => [
                 Easy_install['bsddb3'],
+               ],
+  }
+
+
+  easy_install { 'soappy':
+    name    => '/etc/puppet/modules/hysds_base/files/SOAPpy_py3-0.52.24-py3.7.egg',
+    ensure  => installed,
+    require => [
+                Easy_install['python-dbxml'],
                ],
   }
 

@@ -188,7 +188,7 @@ class hysds_base {
   anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
-    args    => '--yes virtualenv',
+    args    => '--yes virtualenv libxml2 libxslt',
     require => Anaconda['update_all'],
   }
 
@@ -261,17 +261,5 @@ class hysds_base {
                 Easy_install['bsddb3'],
                ],
   }
-
-  #easy_install { 'python-pyxml':
-  #  name    => '/etc/puppet/modules/hysds_base/files/PyXML-0.8.4-py2.7-linux-x86_64.egg',
-  #  ensure  => installed,
-  #  require => Package['python-setuptools'],
-  #}
-  #
-  #easy_install { 'python-processing':
-  #  name    => '/etc/puppet/modules/hysds_base/files/processing-0.39-py2.7-linux-x86_64.egg',
-  #  ensure  => installed,
-  #  require => Package['python-setuptools'],
-  #}
 
 }

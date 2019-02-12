@@ -209,17 +209,10 @@ class hysds_base {
     require => Anaconda['update_all'],
   }
 
-  anaconda { 'm2crypto':
-    path    => $conda_path,
-    action  => 'install',
-    args    => '-y -c conda-forge m2crypto',
-    require => Anaconda['packages'],
-  }
-
   anaconda { 'clean':
     path    => $conda_path,
     action  => 'clean',
-    require => Anaconda['m2crypto'],
+    require => Anaconda['packages'],
   }
   
 
@@ -283,15 +276,6 @@ class hysds_base {
     ensure  => installed,
     require => [
                 Easy_install['bsddb3'],
-               ],
-  }
-
-
-  easy_install { 'soappy':
-    name    => '/etc/puppet/modules/hysds_base/files/SOAPpy_py3-0.52.24-py3.7.egg',
-    ensure  => installed,
-    require => [
-                Easy_install['python-dbxml'],
                ],
   }
 

@@ -11,6 +11,7 @@ class hysds_base {
   $user = 'ops'
   $group = 'ops'
   $docker_group = 'docker'
+  $conda_path = '/opt/conda'
 
   group { $group:
     ensure     => present,
@@ -86,6 +87,27 @@ class hysds_base {
 
 
   #####################################################
+  # set anaconda path
+  #####################################################
+
+  file_line { "user_source_anaconda":
+    ensure  => present,
+    line    => "PATH=${conda_path}/bin:\$PATH",
+    path    => "/home/$user/.bash_profile",
+    after   => "^PATH=",
+    require => User[$user],
+  }
+
+  file_line { "root_source_anaconda":
+    ensure  => present,
+    line    => "PATH=${conda_path}/bin:\$PATH",
+    path    => "/root/.bash_profile",
+    after   => "^PATH=",
+  }
+
+
+
+  #####################################################
   # install .bashrc
   #####################################################
 
@@ -131,25 +153,68 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
-    'm2crypto': ensure => installed;
-    'python': ensure => present;
-    'python-setuptools': ensure => present;
-    'python2-pip': ensure => present;
-    'python-virtualenv': ensure => present;
-    'libxml2-python': ensure => installed;
-    'libxslt-python': ensure => installed;
-    'python-pillow': ensure => installed;
-    'python-formencode': ensure => installed;
-    'python-sqlalchemy': ensure => installed;
-    'python-sqlobject': ensure => installed;
-    'SOAPpy': ensure => installed;
-    'python-twisted-core': ensure => installed;
-    'python-twisted-web': ensure => installed;
-    'python-twisted-words': ensure => installed;
-    'python-crypto': ensure => installed;
-    'python-paramiko': ensure => installed;
+#    'm2crypto': ensure => installed;
+#    'python': ensure => present;
+#    'python-setuptools': ensure => present;
+#    'python2-pip': ensure => present;
+#    'python-virtualenv': ensure => present;
+#    'libxml2-python': ensure => installed;
+#    'libxslt-python': ensure => installed;
+#    'python-pillow': ensure => installed;
+#    'python-formencode': ensure => installed;
+#    'python-sqlalchemy': ensure => installed;
+#    'python-sqlobject': ensure => installed;
+#    'SOAPpy': ensure => installed;
+#    'python-twisted-core': ensure => installed;
+#    'python-twisted-web': ensure => installed;
+#    'python-twisted-words': ensure => installed;
+#    'python-crypto': ensure => installed;
+#    'python-paramiko': ensure => installed;
   }
 
+
+  #####################################################
+  # install anaconda
+  #####################################################
+
+  anaconda { "$conda_path":
+    path    => $conda_path,
+    action  => 'install_miniconda',
+  }
+
+  anaconda { 'pin':
+    path    => $conda_path,
+    action  => 'pin',
+    require => Anaconda["$conda_path"],
+  }
+
+  anaconda { 'config_show_channel_urls':
+    path    => $conda_path,
+    action  => 'config',
+    args    => '--set show_channel_urls True',
+    require => Anaconda['pin'],
+  }
+
+  anaconda { 'update_all':
+    path    => $conda_path,
+    action  => 'update',
+    args    => '--all -y',
+    require => Anaconda['config_show_channel_urls'],
+  }
+
+  anaconda { 'packages':
+    path    => $conda_path,
+    action  => 'install',
+    args    => '-y virtualenv libxml2 libxslt',
+    require => Anaconda['update_all'],
+  }
+
+  anaconda { 'clean':
+    path    => $conda_path,
+    action  => 'clean',
+    require => Anaconda['packages'],
+  }
+  
 
   #####################################################
   # link vim
@@ -186,7 +251,6 @@ class hysds_base {
     mode    => 0775,
   }
 
-
   #####################################################
   # install home baked packages for sciflo and hysds
   #####################################################
@@ -194,41 +258,25 @@ class hysds_base {
   package { 'dbxml':
     provider => rpm,
     ensure   => present,
-    source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.0.18-1.x86_64.rpm",
-    require  => Package['libxml2-python'],
+    source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
+    require  => Anaconda['clean'],
     notify   => Exec['ldconfig'],
   }
 
   easy_install { 'bsddb3':
-    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.1.0-py2.7-linux-x86_64.egg',
+    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-py3.7-linux-x86_64.egg',
     ensure  => installed,
     require => [
-                Package['python-setuptools'],
                 Package['dbxml'],
                ],
   }
 
   easy_install { 'python-dbxml':
-    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.0.18-py2.7-linux-x86_64.egg',
+    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-py3.7-linux-x86_64.egg',
     ensure  => installed,
     require => [
-                Package['python-setuptools'],
-                Package['dbxml'],
                 Easy_install['bsddb3'],
                ],
   }
-
-  easy_install { 'python-pyxml':
-    name    => '/etc/puppet/modules/hysds_base/files/PyXML-0.8.4-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Package['python-setuptools'],
-  }
-  
-  easy_install { 'python-processing':
-    name    => '/etc/puppet/modules/hysds_base/files/processing-0.39-py2.7-linux-x86_64.egg',
-    ensure  => installed,
-    require => Package['python-setuptools'],
-  }
-
 
 }

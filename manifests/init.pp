@@ -205,7 +205,7 @@ class hysds_base {
   anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
-    args    => '-y virtualenv libxml2 libxslt',
+    args    => '-y virtualenv libxml2 libxslt cython cartopy',
     require => Anaconda['update_all'],
   }
 

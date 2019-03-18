@@ -144,7 +144,6 @@ class hysds_base {
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;
     'lvm2': ensure => installed;
-    'firewalld': ensure => installed;
     'openssh-server': ensure => installed;
     'cloud-init': ensure => installed;
     'pbzip2': ensure => installed;
@@ -153,23 +152,6 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
-#    'm2crypto': ensure => installed;
-#    'python': ensure => present;
-#    'python-setuptools': ensure => present;
-#    'python2-pip': ensure => present;
-#    'python-virtualenv': ensure => present;
-#    'libxml2-python': ensure => installed;
-#    'libxslt-python': ensure => installed;
-#    'python-pillow': ensure => installed;
-#    'python-formencode': ensure => installed;
-#    'python-sqlalchemy': ensure => installed;
-#    'python-sqlobject': ensure => installed;
-#    'SOAPpy': ensure => installed;
-#    'python-twisted-core': ensure => installed;
-#    'python-twisted-web': ensure => installed;
-#    'python-twisted-words': ensure => installed;
-#    'python-crypto': ensure => installed;
-#    'python-paramiko': ensure => installed;
   }
 
 

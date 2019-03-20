@@ -10,11 +10,15 @@ ENV GOSU_VERSION 1.10
 ENV USER ops
 ENV GROUP ops
 
+# get org and branch
+ARG ORG
+ARG BRANCH
+
 # git url to hysds base puppet module
-ENV GIT_URL https://github.com/hysds/puppet-hysds_base/raw/master/install.sh
+ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
 
 # add latest repo version to invalidate cache
-ADD https://api.github.com/repos/hysds/puppet-hysds_base/git/refs/heads/master version.json
+ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
 
 # provision via puppet
 RUN set -ex \
@@ -24,7 +28,7 @@ RUN set -ex \
     puppet puppet-firewalld wget curl git sudo \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
- && /tmp/install.sh \
+ && /tmp/install.sh ${ORG} ${BRANCH} \
  && rm -rf /etc/puppet/modules/* /mnt/swapfile \
  && yum clean all \
  && rm -f /tmp/install.sh \

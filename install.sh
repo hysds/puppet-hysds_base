@@ -1,4 +1,15 @@
 #!/bin/bash
+set -e
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <github org> <branch>"
+  echo "e.g.: $0 hysds master"
+  echo "e.g.: $0 hysds python2"
+  echo "e.g.: $0 pymonger python3"
+  exit 1
+fi
+ORG=$1
+BRANCH=$2
 
 mods_dir=/etc/puppet/modules
 cd $mods_dir
@@ -54,13 +65,13 @@ fi
 # export hysds_base puppet module
 ##########################################
 
-git_loc="${git_url}/hysds/puppet-hysds_base"
+git_loc="${git_url}/${ORG}/puppet-hysds_base"
 mod_dir=$mods_dir/hysds_base
 site_pp=$mod_dir/site.pp
 
 # check that module is here; if not, export it
 if [ ! -d $mod_dir ]; then
-  $git_cmd clone $git_loc $mod_dir
+  $git_cmd clone --single-branch -b $BRANCH $git_loc $mod_dir
 fi
 
 

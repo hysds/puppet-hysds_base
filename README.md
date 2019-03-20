@@ -8,10 +8,13 @@ Create a base CentOS7 image as described [here](https://github.com/hysds/hysds-f
 ## VM/Bare-metal Installation
 As _root_ run:
 ```
-bash < <(curl -skL https://github.com/hysds/puppet-hysds_base/raw/master/install.sh)
+cd /etc/puppet/modules
+git clone https://github.com/hysds/puppet-hysds_base.git hysds_base
+cd hysds_base
+./install.sh <github org> <branch>
 ```
 
 ## Build Docker images based on CentOS and CUDA images
 ```
-./build_docker.sh <tag>
+./build_docker.sh <tag> <github org> <github repo branch>
 ```

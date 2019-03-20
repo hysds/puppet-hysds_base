@@ -4,6 +4,7 @@ set -e
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 <github org> <branch>"
   echo "e.g.: $0 hysds master"
+  echo "e.g.: $0 hysds python2"
   echo "e.g.: $0 pymonger python3"
   exit 1
 fi

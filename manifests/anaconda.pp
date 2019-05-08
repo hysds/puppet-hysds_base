@@ -43,6 +43,7 @@ define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args
     update: {
       exec { "conda update $args":
         path    => "${path}/bin:/usr/local/bin:/usr/bin:/bin",
+        timeout => 3600,
       }
     }
 

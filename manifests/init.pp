@@ -233,6 +233,24 @@ class hysds_base {
     mode    => 0775,
   }
 
+
+  #####################################################
+  # install packages via pip
+  #####################################################
+
+  pip { [ 'docker-compose' ]:
+    ensure => latest,
+    require => Anaconda['clean'],
+    notify => Exec['clean_pip_cache'],
+  }
+
+
+  exec { "clean_pip_cache":
+    path    => ["/sbin", "/bin", "/usr/bin"],
+    command => "rm -rf /root/.cache /home/$user/.cache",
+  }
+
+
   #####################################################
   # install home baked packages for sciflo and hysds
   #####################################################

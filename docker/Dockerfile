@@ -6,6 +6,9 @@ LABEL description "Base HySDS image"
 # Set gosu version
 ENV GOSU_VERSION 1.10
 
+# Set docker-stats-on-exit-shim version
+ENV DSOES_VERSION v1.0
+
 # Set user and group
 ENV USER ops
 ENV GROUP ops
@@ -47,7 +50,10 @@ RUN set -ex \
  && rm /usr/local/bin/gosu.asc \
  && rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
- && chmod u+s /usr/local/bin/gosu
+ && chmod u+s /usr/local/bin/gosu \
+ && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
+ && chmod +x /docker-stats-on-exit-shim \
+ && chmod u+s /docker-stats-on-exit-shim
 
 # set default user and workdir
 USER $USER

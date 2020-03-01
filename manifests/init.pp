@@ -87,27 +87,6 @@ class hysds_base {
 
 
   #####################################################
-  # set anaconda path
-  #####################################################
-
-  file_line { "user_source_anaconda":
-    ensure  => present,
-    line    => "PATH=${conda_path}/bin:\$PATH",
-    path    => "/home/$user/.bash_profile",
-    after   => "^PATH=",
-    require => User[$user],
-  }
-
-  file_line { "root_source_anaconda":
-    ensure  => present,
-    line    => "PATH=${conda_path}/bin:\$PATH",
-    path    => "/root/.bash_profile",
-    after   => "^PATH=",
-  }
-
-
-
-  #####################################################
   # install .bashrc
   #####################################################
 

@@ -243,7 +243,7 @@ class hysds_base {
   }
 
   easy_install { 'bsddb3':
-    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-py3.7-linux-x86_64.egg',
+    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-py3.8-linux-x86_64.egg',
     ensure  => installed,
     require => [
                 Package['dbxml'],
@@ -251,7 +251,7 @@ class hysds_base {
   }
 
   easy_install { 'python-dbxml':
-    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-py3.7-linux-x86_64.egg',
+    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-py3.8-linux-x86_64.egg',
     ensure  => installed,
     require => [
                 Easy_install['bsddb3'],

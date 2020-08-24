@@ -10,8 +10,8 @@ ORG=$2
 BRANCH=$3
 
 # pull latest version of base images
-docker pull docker.io/centos:7 || exit 1
-docker tag docker.io/centos:7 docker.io/centos:latest || exit 1
+docker pull hysds/centos:7 || exit 1
+docker tag hysds/centos:7 docker.io/centos:latest || exit 1
 docker pull nvidia/cuda:9.2-runtime-centos7 || exit 1
 docker tag nvidia/cuda:9.2-runtime-centos7 nvidia/cuda:latest || exit 1
 

@@ -1,4 +1,4 @@
-FROM docker.io/centos:7
+FROM hysds/centos:7
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"

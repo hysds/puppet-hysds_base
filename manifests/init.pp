@@ -166,7 +166,7 @@ class hysds_base {
   anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
-    args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools<52.0.0"',
+    args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
     require => Anaconda['update_all'],
   }
 
@@ -242,20 +242,22 @@ class hysds_base {
     notify   => Exec['ldconfig'],
   }
 
-  easy_install { 'bsddb3':
-    name    => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-py3.8-linux-x86_64.egg',
+  pip { 'bsddb3':
+    wheel   => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-cp38-cp38-linux_x86_64.whl',
     ensure  => installed,
     require => [
                 Package['dbxml'],
                ],
+    notify => Exec['clean_pip_cache'],
   }
 
-  easy_install { 'python-dbxml':
-    name    => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-py3.8-linux-x86_64.egg',
+  pip { 'dbxml':
+    wheel   => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-cp38-cp38-linux_x86_64.whl',
     ensure  => installed,
     require => [
-                Easy_install['bsddb3'],
+                Pip['bsddb3'],
                ],
+    notify => Exec['clean_pip_cache'],
   }
 
 }

@@ -3,7 +3,7 @@ define hysds_base::easy_install($ensure = installed) {
     installed: {
       exec { "/opt/conda/bin/easy_install $name":
         path    => "/opt/conda/bin:/usr/local/bin:/usr/bin:/bin",
-        creates => inline_template("/usr/lib/python3.7/site-packages/<%= File.basename(@name) %>"),
+        creates => inline_template("/usr/lib/python3.8/site-packages/<%= File.basename(@name) %>"),
         timeout => 1800,
       }
     }

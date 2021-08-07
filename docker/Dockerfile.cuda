@@ -1,4 +1,3 @@
-#FROM nvidia/cuda:9.2-runtime-centos7
 FROM nvidia/cuda:11.4.1-runtime-centos7
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"

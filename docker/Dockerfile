@@ -1,4 +1,3 @@
-#FROM hysds/centos:7
 FROM centos:7
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"

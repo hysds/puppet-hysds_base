@@ -13,7 +13,8 @@ define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args
         path    => "/usr/local/bin:/usr/bin:/bin",
         # TODO: remove this pin once https://hysds-core.atlassian.net/browse/HC-385 is resolved
         #command => "curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-Linux-x86_64.sh -o /tmp/miniconda.sh",
-        command => "curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh",
+        #command => "curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh",
+        command => "curl -sSL https://repo.continuum.io/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh -o /tmp/miniconda.sh",
         creates => "/tmp/miniconda.sh", 
       }
 

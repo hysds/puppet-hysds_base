@@ -1,4 +1,4 @@
-FROM centos:7
+FROM rockylinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"
@@ -28,7 +28,7 @@ RUN set -ex \
  && yum install -y epel-release \
  && yum update -y \
  && yum install -y \
-    puppet puppet-firewalld wget curl git sudo \
+    puppet wget curl git sudo \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \

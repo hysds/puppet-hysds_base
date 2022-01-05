@@ -11,7 +11,7 @@ fi
 ORG=$1
 BRANCH=$2
 
-mods_dir=/etc/puppet/modules
+mods_dir=/etc/puppetlabs/code/modules
 cd $mods_dir
 
 ##########################################
@@ -58,6 +58,18 @@ mod_dir=$mods_dir/stdlib
 # check that module is here; if not, export it
 if [ ! -d $mod_dir ]; then
   $puppet_cmd module install puppetlabs-stdlib
+fi
+
+
+##########################################
+# install puppetlab's firewall module
+##########################################
+
+mod_dir=$mods_dir/firewall
+
+# check that module is here; if not, export it
+if [ ! -d $mod_dir ]; then
+  $puppet_cmd module install puppetlabs-firewall
 fi
 
 

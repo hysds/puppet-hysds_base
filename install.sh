@@ -11,7 +11,7 @@ fi
 ORG=$1
 BRANCH=$2
 
-mods_dir=/etc/puppet/modules
+mods_dir=/etc/puppetlabs/code/modules
 cd $mods_dir
 
 ##########################################

@@ -32,7 +32,7 @@ RUN set -ex \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \
- && rm -rf /etc/puppet/modules/* /mnt/swapfile \
+ && rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
  && yum clean all \
  && rm -f /tmp/install.sh \
  && rm -rf /var/cache/yum \

@@ -62,6 +62,18 @@ fi
 
 
 ##########################################
+# install puppetlab's firewall module
+##########################################
+
+mod_dir=$mods_dir/firewall
+
+# check that module is here; if not, export it
+if [ ! -d $mod_dir ]; then
+  $puppet_cmd module install puppetlabs-firewall
+fi
+
+
+##########################################
 # export hysds_base puppet module
 ##########################################
 

@@ -31,13 +31,13 @@ fi
 
 git_cmd=`which git`
 if [ $? -ne 0 ]; then
-  echo "Git must be installed. Run 'yum install git'."
+  echo "Git must be installed. Run 'dnf install git'."
   exit 1
 fi
 
 puppet_cmd=`which puppet`
 if [ $? -ne 0 ]; then
-  echo "Puppet must be installed. Run 'yum install puppet'."
+  echo "Puppet must be installed. Run 'dnf install puppet'."
   exit 1
 fi
 

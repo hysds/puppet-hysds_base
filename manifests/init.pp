@@ -119,7 +119,7 @@ class hysds_base {
     'nscd': ensure => installed;
     'chrony': ensure => installed;
     'git': ensure => installed;
-    'docker-ce': ensure => installed;
+    'docker-ce': ensure => installed, install_options => "--nobest";
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;
     'lvm2': ensure => installed;

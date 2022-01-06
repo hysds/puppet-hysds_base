@@ -1,4 +1,5 @@
-FROM rockylinux:8
+ARG TAG=develop
+FROM hysds/base:${TAG}
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "CUDA Base HySDS image"
@@ -17,57 +18,13 @@ ENV GROUP ops
 ARG ORG
 ARG BRANCH
 
-# git url to hysds base puppet module
-ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
-
 # add latest repo version to invalidate cache
 ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
 
-# provision via puppet
+# install NVIDIA drivers
 RUN set -ex \
- && dnf install -y epel-release \
- && dnf update -y \
- && dnf install -y \
-    puppet wget curl git sudo 'dnf-command(config-manager)' \
- && dnf config-manager --add-repo \
+ && sudo dnf config-manager --add-repo \
     https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
- && dnf install kernel-devel-$(uname -r) kernel-headers-$(uname -r) \
- && dnf install nvidia-driver nvidia-settings \
- && dnf install cuda-driver \
- && curl -skL ${GIT_URL} > /tmp/install.sh \
- && chmod 755 /tmp/install.sh \
- && /tmp/install.sh ${ORG} ${BRANCH} \
- && rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
- && dnf clean all \
- && rm -f /tmp/install.sh \
- && rm -rf /var/cache/dnf \
- && for server in ha.pool.sks-keyservers.net \
-      hkp://p80.pool.sks-keyservers.net:80 \
-      keyserver.ubuntu.com \
-      hkp://keyserver.ubuntu.com:80 \
-      keyserver.pgp.com \
-      pgp.mit.edu; do \
-      gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
-    done \
- && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
- && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
- && gpg --verify /usr/local/bin/gosu.asc \
- && rm /usr/local/bin/gosu.asc \
- && rm -r /root/.gnupg/ \
- && chmod +x /usr/local/bin/gosu \
- && chmod u+s /usr/local/bin/gosu \
- && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
- && chmod +x /docker-stats-on-exit-shim \
- && chmod u+s /docker-stats-on-exit-shim
-
-# set default user and workdir
-USER $USER
-WORKDIR /home/$USER
-
-# copy entrypoints
-COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
-COPY docker/docker-entrypoint-with-stats.sh /docker-entrypoint-with-stats.sh
-
-# set default entrypoint
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/bin/bash", "--login"]
+ && sudo dnf install kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y \
+ && sudo dnf install nvidia-driver nvidia-settings -y \
+ && sudo dnf install cuda-driver -y

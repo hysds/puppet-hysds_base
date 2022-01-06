@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.4.1-runtime-centos7
+FROM rockylinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "CUDA Base HySDS image"
@@ -29,7 +29,7 @@ RUN set -ex \
  && dnf update -y \
  && dnf install -y \
     puppet wget curl git sudo \
- && dnf config-manager --add-repo 
+ && dnf config-manager --add-repo \
     https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
  && dnf install kernel-devel-$(uname -r) kernel-headers-$(uname -r) \
  && dnf install nvidia-driver nvidia-settings \

@@ -12,5 +12,5 @@ BRANCH=$3
 # build base images
 docker build --rm --force-rm --build-arg ORG=${ORG} --build-arg BRANCH=${BRANCH} \
   -t hysds/base:${TAG} -f docker/Dockerfile .
-docker build --rm --force-rm --build-arg ORG=${ORG} --build-arg BRANCH=${BRANCH} \
-  -t hysds/cuda-base:${TAG} -f docker/Dockerfile.cuda .
+docker build --rm --force-rm --build-arg TAG=${TAG} --build-arg ORG=${ORG} \
+  --build-arg BRANCH=${BRANCH} -t hysds/cuda-base:${TAG} -f docker/Dockerfile.cuda .

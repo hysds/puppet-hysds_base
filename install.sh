@@ -12,6 +12,7 @@ ORG=$1
 BRANCH=$2
 
 mods_dir=/etc/puppetlabs/code/modules
+mkdir -p $mods_dir
 cd $mods_dir
 
 ##########################################

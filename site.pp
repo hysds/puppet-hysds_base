@@ -15,7 +15,7 @@ class yum {
 
 class docker {
    yumrepo { "docker-ce-stable":
-      baseurl => "https://download.docker.com/linux/rhel/$releasever/$basearch/stable",
+      baseurl => "https://download.docker.com/linux/centos/8/$architecture/stable",
       enabled => 1,
       gpgcheck => 0
    }

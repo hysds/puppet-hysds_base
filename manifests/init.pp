@@ -25,7 +25,7 @@ class hysds_base {
     home       => "/home/$user",
     managehome => true,
     require    => [
-                   Package['docker-ci'],
+                   Package['docker-ce'],
                    Group[$group],
                   ],
   }

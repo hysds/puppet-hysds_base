@@ -28,7 +28,7 @@ RUN set -ex \
  && dnf install -y epel-release \
  && dnf update -y \
  && dnf install -y \
-    puppet wget curl git sudo \
+    puppet wget curl git sudo 'dnf-command(config-manager)' \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \

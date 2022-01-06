@@ -28,7 +28,7 @@ RUN set -ex \
  && dnf install -y epel-release \
  && dnf update -y \
  && dnf install -y \
-    puppet wget curl git sudo \
+    puppet wget curl git sudo 'dnf-command(config-manager)' \
  && dnf config-manager --add-repo \
     https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo \
  && dnf install kernel-devel-$(uname -r) kernel-headers-$(uname -r) \

@@ -1,6 +1,6 @@
 if versioncmp($::puppetversion,'3.6.1') >= 0 {
 
-  $allow_virtual_packages = lookup('allow_virtual_packages',false)
+  $allow_virtual_packages = lookup('allow_virtual_packages', undef, undef, false)
 
   Package {
     allow_virtual => $allow_virtual_packages,

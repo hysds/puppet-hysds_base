@@ -132,6 +132,7 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
+    'libnsl': ensure => installed;
   }
 
 

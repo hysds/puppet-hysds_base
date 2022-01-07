@@ -133,6 +133,7 @@ class hysds_base {
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
     'libnsl': ensure => installed;
+    'libselinux-utils': ensure => installed;
   }
 
 

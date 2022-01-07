@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM oraclelinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"

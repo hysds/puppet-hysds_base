@@ -79,11 +79,10 @@ class hysds_base {
   # disable SELinux
   #####################################################
 
-  file_line { "disable_selinux":
+  file { "/etc/selinux/config":
     ensure  => present,
-    line    => "SELINUX=disabled",
-    path    => "/etc/selinux/config",
-    match   => "^SELINUX=",
+    mode    => "0644",
+    content => "SELINUX=disabled\n",
   }
 
 

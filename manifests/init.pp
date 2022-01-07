@@ -71,7 +71,10 @@ class hysds_base {
     line    => "    name: $user",
     path    => "/etc/cloud/cloud.cfg",
     match   => "^    name:",
-    require => User[$user],
+    require => [
+                User[$user],
+                Package['cloud-init'],
+               ],
   }
 
 

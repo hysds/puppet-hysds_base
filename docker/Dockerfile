@@ -1,4 +1,4 @@
-FROM centos:7
+FROM rockylinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"
@@ -25,17 +25,17 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 
 # provision via puppet
 RUN set -ex \
- && yum install -y epel-release \
- && yum update -y \
- && yum install -y \
-    puppet puppet-firewalld wget curl git sudo \
+ && dnf install -y epel-release \
+ && dnf update -y \
+ && dnf install -y \
+    puppet wget curl git sudo 'dnf-command(config-manager)' \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \
- && rm -rf /etc/puppet/modules/* /mnt/swapfile \
- && yum clean all \
+ && rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
+ && dnf clean all \
  && rm -f /tmp/install.sh \
- && rm -rf /var/cache/yum \
+ && rm -rf /var/cache/dnf \
  && for server in ha.pool.sks-keyservers.net \
       hkp://p80.pool.sks-keyservers.net:80 \
       keyserver.ubuntu.com \

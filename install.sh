@@ -11,7 +11,8 @@ fi
 ORG=$1
 BRANCH=$2
 
-mods_dir=/etc/puppet/modules
+mods_dir=/etc/puppetlabs/code/modules
+mkdir -p $mods_dir
 cd $mods_dir
 
 ##########################################
@@ -31,13 +32,13 @@ fi
 
 git_cmd=`which git`
 if [ $? -ne 0 ]; then
-  echo "Git must be installed. Run 'yum install git'."
+  echo "Git must be installed. Run 'dnf install git'."
   exit 1
 fi
 
 puppet_cmd=`which puppet`
 if [ $? -ne 0 ]; then
-  echo "Puppet must be installed. Run 'yum install puppet'."
+  echo "Puppet must be installed. Run 'dnf install puppet'."
   exit 1
 fi
 
@@ -58,6 +59,18 @@ mod_dir=$mods_dir/stdlib
 # check that module is here; if not, export it
 if [ ! -d $mod_dir ]; then
   $puppet_cmd module install puppetlabs-stdlib
+fi
+
+
+##########################################
+# install puppetlab's firewall module
+##########################################
+
+mod_dir=$mods_dir/firewall
+
+# check that module is here; if not, export it
+if [ ! -d $mod_dir ]; then
+  $puppet_cmd module install puppetlabs-firewall
 fi
 
 

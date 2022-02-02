@@ -25,6 +25,7 @@ class hysds_base {
     home       => "/home/$user",
     managehome => true,
     require    => [
+                   Package['docker-ce'],
                    Group[$group],
                   ],
   }
@@ -33,14 +34,14 @@ class hysds_base {
     ensure  => directory,
     owner   => $user,
     group   => $group,
-    mode    => 0755,
+    mode    => "0755",
     require => User[$user],
   }
 
   file { "/etc/sudoers.d/90-cloudimg-$user":
     ensure  => file,
     content  => template('hysds_base/90-cloudimg-user'),
-    mode    => 0440,
+    mode    => "0440",
     require => [
                 User[$user],
                ],
@@ -51,11 +52,11 @@ class hysds_base {
   # add .inputrc to users' home
   #####################################################
 
-  inputrc { 'root':
+  hysds_base::inputrc { 'root':
     home => '/root',
   }
   
-  inputrc { $user:
+  hysds_base::inputrc { $user:
     home    => "/home/$user",
     require => User[$user],
   }
@@ -70,7 +71,10 @@ class hysds_base {
     line    => "    name: $user",
     path    => "/etc/cloud/cloud.cfg",
     match   => "^    name:",
-    require => User[$user],
+    require => [
+                User[$user],
+                Package['cloud-init'],
+               ],
   }
 
 
@@ -78,11 +82,17 @@ class hysds_base {
   # disable SELinux
   #####################################################
 
-  file_line { "disable_selinux":
+  #file_line { "disable_selinux":
+  #  ensure  => present,
+  #  line    => "SELINUX=disabled",
+  #  path    => "/etc/selinux/config",
+  #  match   => "^SELINUX=",
+  #}
+
+  file { "/etc/selinux/config":
     ensure  => present,
-    line    => "SELINUX=disabled",
-    path    => "/etc/selinux/config",
-    match   => "^SELINUX=",
+    mode    => "0644",
+    content => "SELINUX=disabled\n",
   }
 
 
@@ -95,14 +105,14 @@ class hysds_base {
     content => template('hysds_base/bashrc'),
     owner   => $user,
     group   => $group,
-    mode    => 0644,
+    mode    => "0644",
     require => User[$user],
   }
 
   file { "/root/.bashrc":
     ensure  => present,
     content => template('hysds_base/bashrc'),
-    mode    => 0600,
+    mode    => "0600",
   }
 
 
@@ -119,7 +129,7 @@ class hysds_base {
     'nscd': ensure => installed;
     'chrony': ensure => installed;
     'git': ensure => installed;
-    'docker-ce': ensure => installed;
+    'docker-ce': ensure => installed, install_options => "--nobest";
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;
     'lvm2': ensure => installed;
@@ -131,6 +141,8 @@ class hysds_base {
     'zip': ensure => installed;
     'graphviz': ensure => installed;
     'ImageMagick': ensure => installed;
+    'libnsl': ensure => installed;
+    'libselinux-utils': ensure => installed;
   }
 
 
@@ -138,42 +150,42 @@ class hysds_base {
   # install anaconda
   #####################################################
 
-  anaconda { "$conda_path":
+  hysds_base::anaconda { "$conda_path":
     path    => $conda_path,
     action  => 'install_miniconda',
   }
 
-  anaconda { 'pin':
+  hysds_base::anaconda { 'pin':
     path    => $conda_path,
     action  => 'pin',
-    require => Anaconda["$conda_path"],
+    require => Hysds_base::Anaconda["$conda_path"],
   }
 
-  anaconda { 'config_show_channel_urls':
+  hysds_base::anaconda { 'config_show_channel_urls':
     path    => $conda_path,
     action  => 'config',
     args    => '--set show_channel_urls True',
-    require => Anaconda['pin'],
+    require => Hysds_base::Anaconda['pin'],
   }
 
-  anaconda { 'update_all':
+  hysds_base::anaconda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Anaconda['config_show_channel_urls'],
+    require => Hysds_base::Anaconda['config_show_channel_urls'],
   }
 
-  anaconda { 'packages':
+  hysds_base::anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
     args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
-    require => Anaconda['update_all'],
+    require => Hysds_base::Anaconda['update_all'],
   }
 
-  anaconda { 'clean':
+  hysds_base::anaconda { 'clean':
     path    => $conda_path,
     action  => 'clean',
-    require => Anaconda['packages'],
+    require => Hysds_base::Anaconda['packages'],
   }
   
 
@@ -181,7 +193,7 @@ class hysds_base {
   # link vim
   #####################################################
   
-  update_alternatives { 'vi':
+  hysds_base::update_alternatives { 'vi':
     link     => '/bin/vi',
     path     => '/bin/vim',
     priority => 1,
@@ -209,7 +221,7 @@ class hysds_base {
     ensure  => directory,
     owner   => $user,
     group   => $group,
-    mode    => 0775,
+    mode    => "0775",
   }
 
 
@@ -217,9 +229,9 @@ class hysds_base {
   # install packages via pip
   #####################################################
 
-  pip { [ 'docker-compose' ]:
+  hysds_base::pip { [ 'docker-compose' ]:
     ensure => latest,
-    require => Anaconda['clean'],
+    require => Hysds_base::Anaconda['clean'],
     notify => Exec['clean_pip_cache'],
   }
 
@@ -237,13 +249,13 @@ class hysds_base {
   package { 'dbxml':
     provider => rpm,
     ensure   => present,
-    source   => "/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Anaconda['clean'],
+    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
+    require  => Hysds_base::Anaconda['clean'],
     notify   => Exec['ldconfig'],
   }
 
-  pip { 'bsddb3':
-    wheel   => '/etc/puppet/modules/hysds_base/files/bsddb3-6.2.1-cp39-cp39-linux_x86_64.whl',
+  hysds_base::pip { 'bsddb3':
+    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp39-cp39-linux_x86_64.whl',
     ensure  => installed,
     require => [
                 Package['dbxml'],
@@ -251,11 +263,11 @@ class hysds_base {
     notify => Exec['clean_pip_cache'],
   }
 
-  pip { 'dbxml':
-    wheel   => '/etc/puppet/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_x86_64.whl',
+  hysds_base::pip { 'dbxml':
+    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_x86_64.whl',
     ensure  => installed,
     require => [
-                Pip['bsddb3'],
+                Hysds_base::Pip['bsddb3'],
                ],
     notify => Exec['clean_pip_cache'],
   }

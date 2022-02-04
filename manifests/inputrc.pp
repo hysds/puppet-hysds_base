@@ -1,7 +1,7 @@
 define hysds_base::inputrc ($user = $title, $home) {
   file { "$home/.inputrc":
     ensure  => file,
-    mode    => 0644,
+    mode    => "0644",
     owner   => $user,
     group   => $user,
     content => '#"\e[5~": history-search-backward #for "page up" key

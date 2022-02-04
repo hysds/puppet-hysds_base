@@ -18,7 +18,7 @@ define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args
 
       file { "/tmp/miniconda.sh":
         ensure => present,
-        mode   => 0755,
+        mode   => "0755",
         require => Exec["download_installer"],
       }
 

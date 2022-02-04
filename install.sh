@@ -11,7 +11,8 @@ fi
 ORG=$1
 BRANCH=$2
 
-mods_dir=/etc/puppet/modules
+mods_dir=/etc/puppetlabs/code/modules
+mkdir -p $mods_dir
 cd $mods_dir
 
 ##########################################
@@ -31,13 +32,13 @@ fi
 
 git_cmd=`which git`
 if [ $? -ne 0 ]; then
-  echo "Git must be installed. Run 'yum install git'."
+  echo "Git must be installed. Run 'dnf install git'."
   exit 1
 fi
 
 puppet_cmd=`which puppet`
 if [ $? -ne 0 ]; then
-  echo "Puppet must be installed. Run 'yum install puppet'."
+  echo "Puppet must be installed. Run 'dnf install puppet'."
   exit 1
 fi
 
@@ -62,6 +63,18 @@ fi
 
 
 ##########################################
+# install puppetlab's firewall module
+##########################################
+
+mod_dir=$mods_dir/firewall
+
+# check that module is here; if not, export it
+if [ ! -d $mod_dir ]; then
+  $puppet_cmd module install puppetlabs-firewall
+fi
+
+
+##########################################
 # export hysds_base puppet module
 ##########################################
 
@@ -79,4 +92,10 @@ fi
 # apply
 ##########################################
 
-$puppet_cmd apply $site_pp
+PUPPET_EXIT_CODE=0
+$puppet_cmd apply --detailed-exitcodes $site_pp || PUPPET_EXIT_CODE=$?
+if [[ ("$PUPPET_EXIT_CODE" -ne 0 ) && ("$PUPPET_EXIT_CODE" -ne 2) ]]; then
+  echo "Puppet failed to run cleanly."
+  exit 1
+fi
+exit 0

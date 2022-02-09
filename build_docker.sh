@@ -10,7 +10,7 @@ ORG=$2
 BRANCH=$3
 
 # build base images
-buildah build --rm --force-rm --progress=plain --build-arg ORG=${ORG} --build-arg BRANCH=${BRANCH} \
+buildah build --rm --force-rm --layers --build-arg ORG=${ORG} --build-arg BRANCH=${BRANCH} \
   -t hysds/base:${TAG} -f docker/Dockerfile .
-buildah build --rm --force-rm --progress=plain --build-arg TAG=${TAG} --build-arg ORG=${ORG} \
-  --build-arg BRANCH=${BRANCH} -t hysds/cuda-base:${TAG} -f docker/Dockerfile.cuda .
+#buildah build --rm --force-rm --layers --build-arg TAG=${TAG} --build-arg ORG=${ORG} \
+#  --build-arg BRANCH=${BRANCH} -t hysds/cuda-base:${TAG} -f docker/Dockerfile.cuda .

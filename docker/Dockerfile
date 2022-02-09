@@ -48,21 +48,28 @@ RUN set -ex \
  && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
  && gpg --verify /usr/local/bin/gosu.asc \
  && rm /usr/local/bin/gosu.asc \
- && rm -r /root/.gnupg/ \
+ && rm -rf /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
  && chmod +x /docker-stats-on-exit-shim \
- && chmod u+s /docker-stats-on-exit-shim
+ && chmod u+s /docker-stats-on-exit-shim \
+ && mkdir -p /home/${USER}/.local/share/containers \
+ && chown -R ${USER}:${USER} /home/${USER}
+
+# Note VOLUME options must always happen after the chown call above
+# RUN commands can not modify existing volumes
+VOLUME /var/lib/containers
+VOLUME /home/ops/.local/share/containers
 
 # set default user and workdir
 USER $USER
 WORKDIR /home/$USER
 
 # copy entrypoints
-COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
-COPY docker/docker-entrypoint-with-stats.sh /docker-entrypoint-with-stats.sh
+#COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+#COPY docker/docker-entrypoint-with-stats.sh /docker-entrypoint-with-stats.sh
 
 # set default entrypoint
-ENTRYPOINT ["/docker-entrypoint.sh"]
+#ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/bin/bash", "--login"]

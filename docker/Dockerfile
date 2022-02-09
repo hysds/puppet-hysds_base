@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM oraclelinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"
@@ -25,10 +25,10 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 
 # provision via puppet
 RUN set -ex \
- && dnf install -y epel-release \
+ && dnf install -y oracle-epel-release-el8 \
  && dnf update -y \
  && dnf install -y \
-    puppet wget curl git sudo 'dnf-command(config-manager)' \
+    puppet wget curl git sudo 'dnf-command(config-manager)' which tar \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \

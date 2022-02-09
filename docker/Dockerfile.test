@@ -1,0 +1,47 @@
+FROM rockylinux:8
+
+MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
+LABEL description "Base HySDS image"
+
+# Set gosu version
+ENV GOSU_VERSION 1.10
+
+# Set docker-stats-on-exit-shim version
+ENV DSOES_VERSION v1.0
+
+# Set user and group
+ENV USER ops
+ENV GROUP ops
+
+# get org and branch
+ARG ORG
+ARG BRANCH
+
+# git url to hysds base puppet module
+ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
+
+# add latest repo version to invalidate cache
+ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
+
+# provision via puppet
+RUN set -ex \
+ && dnf install -y epel-release \
+ && dnf update -y \
+ && dnf install -y \
+    puppet wget curl git sudo 'dnf-command(config-manager)' \
+ && useradd -d /home/ops -m -s /bin/bash -U ops \
+ && echo "ops:ops" | sudo chpasswd \
+ && echo "%ops ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ops \
+ && mkdir -p /home/ops/.local/share/containers \
+ && chown -R ops:ops /home/ops
+
+# Note VOLUME options must always happen after the chown call above
+# RUN commands can not modify existing volumes
+VOLUME /var/lib/containers
+VOLUME /home/ops/.local/share/containers
+
+# set default user and workdir
+USER $USER
+WORKDIR /home/$USER
+
+CMD ["/bin/bash", "--login"]

@@ -28,7 +28,7 @@ RUN set -ex \
  && dnf install -y oracle-epel-release-el8 \
  && dnf update -y \
  && dnf install -y \
-    puppet wget curl git sudo 'dnf-command(config-manager)' which tar \
+    puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \

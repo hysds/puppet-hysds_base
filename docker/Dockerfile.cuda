@@ -24,6 +24,8 @@ ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
 # add latest repo version to invalidate cache
 ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
 
+USER root
+
 # provision via puppet
 RUN set -ex \
  && yum install -y epel-release \

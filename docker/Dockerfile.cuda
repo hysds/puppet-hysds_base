@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.4.1-runtime-centos7
+ARG TAG=develop
+FROM hysds/base:${TAG}
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "CUDA Base HySDS image"
@@ -22,6 +23,8 @@ ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
 
 # add latest repo version to invalidate cache
 ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
+
+USER root
 
 # provision via puppet
 RUN set -ex \

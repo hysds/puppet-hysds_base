@@ -27,6 +27,7 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 RUN set -ex \
  && yum install -y epel-release \
  && yum update -y \
+ && rpm -Uvh https://yum.puppetlabs.com/puppet5/puppet5-release-el-7.noarch.rpm \
  && yum install -y \
     puppet puppet-firewalld wget curl git sudo \
  && curl -skL ${GIT_URL} > /tmp/install.sh \

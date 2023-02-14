@@ -246,30 +246,30 @@ class hysds_base {
   # install home baked packages for sciflo and hysds
   #####################################################
 
-  package { 'dbxml':
-    provider => rpm,
-    ensure   => present,
-    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::Anaconda['clean'],
-    notify   => Exec['ldconfig'],
-  }
-
-  hysds_base::pip { 'bsddb3':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp39-cp39-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Package['dbxml'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
-
-  hysds_base::pip { 'dbxml':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Hysds_base::Pip['bsddb3'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
+  # package { 'dbxml':
+  #   provider => rpm,
+  #   ensure   => present,
+  #   source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
+  #   require  => Hysds_base::Anaconda['clean'],
+  #   notify   => Exec['ldconfig'],
+  # }
+  #
+  # hysds_base::pip { 'bsddb3':
+  #   wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp39-cp39-linux_x86_64.whl',
+  #   ensure  => installed,
+  #   require => [
+  #               Package['dbxml'],
+  #              ],
+  #   notify => Exec['clean_pip_cache'],
+  # }
+  #
+  # hysds_base::pip { 'dbxml':
+  #   wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_x86_64.whl',
+  #   ensure  => installed,
+  #   require => [
+  #               Hysds_base::Pip['bsddb3'],
+  #              ],
+  #   notify => Exec['clean_pip_cache'],
+  # }
 
 }

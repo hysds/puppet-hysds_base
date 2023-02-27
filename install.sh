@@ -85,7 +85,7 @@ site_pp=$mod_dir/site.pp
 # check that module is here; if not, export it
 if [ ! -d $mod_dir ]; then
 #  $git_cmd clone --single-branch -b $BRANCH $git_loc $mod_dir
-  $git_cmd clone --single-branch -b py310 $git_loc $mod_dir
+  $git_cmd clone --single-branch -b python3.10 $git_loc $mod_dir
 fi
 
 

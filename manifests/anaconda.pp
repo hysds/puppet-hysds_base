@@ -3,6 +3,7 @@ define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args
     install_miniconda: {
       exec { "install_anaconda":
         path    => "/usr/local/bin:/usr/bin:/bin",
+        environment => ["HOME=/root"],
         command => "/tmp/miniconda.sh -b -p $path",
         creates => $path,
         require => File["/tmp/miniconda.sh"],

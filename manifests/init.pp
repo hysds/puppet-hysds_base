@@ -146,47 +146,47 @@ class hysds_base {
   }
 
 
-  #####################################################
-  # install anaconda
-  #####################################################
-
-  hysds_base::anaconda { "$conda_path":
-    path    => $conda_path,
-    action  => 'install_miniconda',
-  }
-
-  hysds_base::anaconda { 'pin':
-    path    => $conda_path,
-    action  => 'pin',
-    require => Hysds_base::Anaconda["$conda_path"],
-  }
-
-  hysds_base::anaconda { 'config_show_channel_urls':
-    path    => $conda_path,
-    action  => 'config',
-    args    => '--set show_channel_urls True',
-    require => Hysds_base::Anaconda['pin'],
-  }
-
-  hysds_base::anaconda { 'update_all':
-    path    => $conda_path,
-    action  => 'update',
-    args    => '--all -y',
-    require => Hysds_base::Anaconda['config_show_channel_urls'],
-  }
-
-  hysds_base::anaconda { 'packages':
-    path    => $conda_path,
-    action  => 'install',
-    args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
-    require => Hysds_base::Anaconda['update_all'],
-  }
-
-  hysds_base::anaconda { 'clean':
-    path    => $conda_path,
-    action  => 'clean',
-    require => Hysds_base::Anaconda['packages'],
-  }
+#  #####################################################
+#  # install anaconda
+#  #####################################################
+#
+#  hysds_base::anaconda { "$conda_path":
+#    path    => $conda_path,
+#    action  => 'install_miniconda',
+#  }
+#
+#  hysds_base::anaconda { 'pin':
+#    path    => $conda_path,
+#    action  => 'pin',
+#    require => Hysds_base::Anaconda["$conda_path"],
+#  }
+#
+#  hysds_base::anaconda { 'config_show_channel_urls':
+#    path    => $conda_path,
+#    action  => 'config',
+#    args    => '--set show_channel_urls True',
+#    require => Hysds_base::Anaconda['pin'],
+#  }
+#
+#  hysds_base::anaconda { 'update_all':
+#    path    => $conda_path,
+#    action  => 'update',
+#    args    => '--all -y',
+#    require => Hysds_base::Anaconda['config_show_channel_urls'],
+#  }
+#
+#  hysds_base::anaconda { 'packages':
+#    path    => $conda_path,
+#    action  => 'install',
+#    args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
+#    require => Hysds_base::Anaconda['update_all'],
+#  }
+#
+#  hysds_base::anaconda { 'clean':
+#    path    => $conda_path,
+#    action  => 'clean',
+#    require => Hysds_base::Anaconda['packages'],
+#  }
   
 
   #####################################################
@@ -225,50 +225,50 @@ class hysds_base {
   }
 
 
-  #####################################################
-  # install packages via pip
-  #####################################################
-
-  hysds_base::pip { [ 'docker-compose' ]:
-    ensure => latest,
-    require => Hysds_base::Anaconda['clean'],
-    notify => Exec['clean_pip_cache'],
-  }
-
-
-  exec { "clean_pip_cache":
-    path    => ["/sbin", "/bin", "/usr/bin"],
-    command => "rm -rf /root/.cache /home/$user/.cache",
-  }
-
-
-  #####################################################
-  # install home baked packages for sciflo and hysds
-  #####################################################
-
-  package { 'dbxml':
-    provider => rpm,
-    ensure   => present,
-    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::Anaconda['clean'],
-    notify   => Exec['ldconfig'],
-  }
-
-  hysds_base::pip { 'bsddb3':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp310-cp310-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Package['dbxml'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
-
-  hysds_base::pip { 'dbxml':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp310-cp310-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Hysds_base::Pip['bsddb3'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
+#  #####################################################
+#  # install packages via pip
+#  #####################################################
+#
+#  hysds_base::pip { [ 'docker-compose' ]:
+#    ensure => latest,
+#    require => Hysds_base::Anaconda['clean'],
+#    notify => Exec['clean_pip_cache'],
+#  }
+#
+#
+#  exec { "clean_pip_cache":
+#    path    => ["/sbin", "/bin", "/usr/bin"],
+#    command => "rm -rf /root/.cache /home/$user/.cache",
+#  }
+#
+#
+#  #####################################################
+#  # install home baked packages for sciflo and hysds
+#  #####################################################
+#
+#  package { 'dbxml':
+#    provider => rpm,
+#    ensure   => present,
+#    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
+#    require  => Hysds_base::Anaconda['clean'],
+#    notify   => Exec['ldconfig'],
+#  }
+#
+#  hysds_base::pip { 'bsddb3':
+#    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp310-cp310-linux_x86_64.whl',
+#    ensure  => installed,
+#    require => [
+#                Package['dbxml'],
+#               ],
+#    notify => Exec['clean_pip_cache'],
+#  }
+#
+#  hysds_base::pip { 'dbxml':
+#    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp310-cp310-linux_x86_64.whl',
+#    ensure  => installed,
+#    require => [
+#                Hysds_base::Pip['bsddb3'],
+#               ],
+#    notify => Exec['clean_pip_cache'],
+#  }
 }

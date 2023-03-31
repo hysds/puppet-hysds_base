@@ -29,13 +29,13 @@ RUN set -ex \
  && dnf update -y \
  && dnf install -y \
     puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
- && curl -skL ${GIT_URL} > /tmp/install.sh \
- && chmod 755 /tmp/install.sh \
- && /tmp/install.sh ${ORG} ${BRANCH} \
- && rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
- && dnf clean all \
- && rm -f /tmp/install.sh \
- && rm -rf /var/cache/dnf \
+ #&& curl -skL ${GIT_URL} > /tmp/install.sh \
+ #&& chmod 755 /tmp/install.sh \
+ #&& /tmp/install.sh ${ORG} ${BRANCH} \
+ #&& rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
+ #&& dnf clean all \
+ #&& rm -f /tmp/install.sh \
+ #&& rm -rf /var/cache/dnf \
  # Commenting out for now as we are consistently getting
  # the following error: gpg: keyserver receive failed: Server indicated a failure
  # && for server in ha.pool.sks-keyservers.net \

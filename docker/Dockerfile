@@ -50,7 +50,7 @@ RUN set -ex \
  && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
  #&& gpg --verify /usr/local/bin/gosu.asc \
  && rm /usr/local/bin/gosu.asc \
- && rm -r /root/.gnupg/ \
+ #&& rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \

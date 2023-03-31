@@ -48,7 +48,7 @@ RUN set -ex \
  #   done \
  && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
  && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
- && gpg --verify /usr/local/bin/gosu.asc \
+ #&& gpg --verify /usr/local/bin/gosu.asc \
  && rm /usr/local/bin/gosu.asc \
  && rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \

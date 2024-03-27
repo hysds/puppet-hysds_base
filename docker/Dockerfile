@@ -10,8 +10,8 @@ ENV GOSU_VERSION 1.10
 ENV DSOES_VERSION v1.0
 
 # Set user and group
-ENV USER ops
-ENV GROUP ops
+#ENV USER ops
+#ENV GROUP ops
 
 # get org and branch
 ARG ORG

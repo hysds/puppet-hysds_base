@@ -5,8 +5,8 @@ MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "CUDA Base HySDS image"
 
 # Set user and group
-#ENV USER ops
-#ENV GROUP ops
+ENV USER ops
+ENV GROUP ops
 
 # get org and branch
 ARG ORG

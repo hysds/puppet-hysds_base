@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM oraclelinux:8
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"
@@ -25,10 +25,10 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 
 # provision via puppet
 RUN set -ex \
- && dnf install -y epel-release \
+ dnf install -y oracle-epel-release-el8 \
  && dnf update -y \
  && dnf install -y \
-    puppet wget curl git sudo 'dnf-command(config-manager)' \
+    puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \
@@ -36,19 +36,21 @@ RUN set -ex \
  && dnf clean all \
  && rm -f /tmp/install.sh \
  && rm -rf /var/cache/dnf \
- && for server in ha.pool.sks-keyservers.net \
-      hkp://p80.pool.sks-keyservers.net:80 \
-      keyserver.ubuntu.com \
-      hkp://keyserver.ubuntu.com:80 \
-      keyserver.pgp.com \
-      pgp.mit.edu; do \
-      gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
-    done \
+ # Commenting out for now as we are consistently getting
+ # the following error: gpg: keyserver receive failed: Server indicated a failure
+ # && for server in ha.pool.sks-keyservers.net \
+ #     hkp://p80.pool.sks-keyservers.net:80 \
+ #     keyserver.ubuntu.com \
+ #     hkp://keyserver.ubuntu.com:80 \
+ #     keyserver.pgp.com \
+ #     pgp.mit.edu; do \
+ #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
+ #   done \
  && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
  && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
- && gpg --verify /usr/local/bin/gosu.asc \
+ #&& gpg --verify /usr/local/bin/gosu.asc \
  && rm /usr/local/bin/gosu.asc \
- && rm -rf /root/.gnupg/ \
+ #&& rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \

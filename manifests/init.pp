@@ -10,7 +10,6 @@ class hysds_base {
   
   $user = 'ops'
   $group = 'ops'
-  $docker_group = 'docker'
   $conda_path = '/opt/conda'
 
   group { $group:
@@ -20,12 +19,10 @@ class hysds_base {
   user { $user:
     ensure     => present,
     gid        => $group,
-    groups     => [ $docker_group ],
     shell      => '/bin/bash',
     home       => "/home/$user",
     managehome => true,
     require    => [
-                   Package['docker-ce'],
                    Group[$group],
                   ],
   }
@@ -129,7 +126,7 @@ class hysds_base {
     'nscd': ensure => installed;
     'chrony': ensure => installed;
     'git': ensure => installed;
-    'docker-ce': ensure => installed, install_options => "--nobest";
+    'podman': ensure => installed;
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;
     'lvm2': ensure => installed;
@@ -228,13 +225,6 @@ class hysds_base {
   #####################################################
   # install packages via pip
   #####################################################
-
-  hysds_base::pip { [ 'docker-compose' ]:
-    ensure => latest,
-    require => Hysds_base::Anaconda['clean'],
-    notify => Exec['clean_pip_cache'],
-  }
-
 
   exec { "clean_pip_cache":
     path    => ["/sbin", "/bin", "/usr/bin"],

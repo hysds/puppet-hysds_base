@@ -69,9 +69,9 @@ USER $USER
 WORKDIR /home/$USER
 
 # copy entrypoints
-#COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
-#COPY docker/docker-entrypoint-with-stats.sh /docker-entrypoint-with-stats.sh
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker/docker-entrypoint-with-stats.sh /docker-entrypoint-with-stats.sh
 
 # set default entrypoint
-#ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/bin/bash", "--login"]

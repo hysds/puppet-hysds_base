@@ -30,7 +30,7 @@ RUN set -ex \
  && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
  && dnf config-manager --set-disabled docker-ce-stable \
  && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.4.9-3.1.el8.x86_64.rpm \
- && dnf install --enablerepo=docker-ce-stable docker-ce \
+ && dnf install --enablerepo=docker-ce-stable docker-ce --nobest \
  && dnf update -y \
  && dnf install -y \
     puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \

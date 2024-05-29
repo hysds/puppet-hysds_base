@@ -126,7 +126,6 @@ class hysds_base {
     'nscd': ensure => installed;
     'chrony': ensure => installed;
     'git': ensure => installed;
-#    'podman': ensure => installed;
     'yum-utils': ensure => installed;
     'device-mapper-persistent-data': ensure => installed;
     'lvm2': ensure => installed;

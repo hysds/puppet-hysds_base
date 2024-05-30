@@ -14,9 +14,8 @@ if [ -e /var/run/docker.sock ]; then
   # These groupmod/usermod commands are needed in order to start up httpd under sudo
   gosu 0:0 groupmod -g $GID ops 2>/dev/null
   gosu 0:0 usermod -u $UID -g $GID ops 2>/dev/null
-fi
-
-if id -u "docker" >/dev/null 2>&1; then
+  # FIXME: Unsure if I should wrap this in an "if id -u "docker" >/dev/null 2>&1; then" clause
+  # instead
   gosu 0:0 usermod -aG docker ops 2>/dev/null
 fi
 

@@ -171,6 +171,8 @@ class hysds_base {
     require => Hysds_base::Anaconda['config_show_channel_urls'],
   }
 
+  # Pin setuptools until https://github.com/pypa/setuptools/issues/4399 is fixed
+  # Related PR: https://github.com/pypa/setuptools/pull/4422
   hysds_base::anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',

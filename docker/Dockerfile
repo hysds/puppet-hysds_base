@@ -1,7 +1,8 @@
+FROM oraclelinux:8
 # Using custom oraclelinux image with /dev removed
 # This supports loading these containers using podman with
 # an NFS backend
-FROM hysds/iems-oraclelinux:8.9.240601
+#FROM hysds/iems-oraclelinux:8.9.240601
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"

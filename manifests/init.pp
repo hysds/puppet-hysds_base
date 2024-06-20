@@ -171,12 +171,10 @@ class hysds_base {
     require => Hysds_base::Anaconda['config_show_channel_urls'],
   }
 
-  # Pin setuptools until https://github.com/pypa/setuptools/issues/4399 is fixed
-  # Related PR: https://github.com/pypa/setuptools/pull/4422
   hysds_base::anaconda { 'packages':
     path    => $conda_path,
     action  => 'install',
-    args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools<70.0"',
+    args    => '-y virtualenv libxml2 libxslt cython cartopy future setuptools',
     require => Hysds_base::Anaconda['update_all'],
   }
 

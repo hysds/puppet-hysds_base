@@ -71,7 +71,7 @@ RUN set -ex \
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes
 VOLUME /var/lib/containers
-VOLUME /home/ops/.local/share/containers
+VOLUME /root/.local/share/containers
 
 # set default user and workdir
 USER $USER

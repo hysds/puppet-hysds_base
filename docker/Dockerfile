@@ -14,8 +14,8 @@ ENV GOSU_VERSION 1.10
 ENV DSOES_VERSION v1.0
 
 # Set user and group
-ENV USER ops
-ENV GROUP ops
+ENV USER root
+ENV GROUP root
 
 # get org and branch
 ARG ORG
@@ -65,8 +65,8 @@ RUN set -ex \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
  && chmod +x /docker-stats-on-exit-shim \
  && chmod u+s /docker-stats-on-exit-shim \
- && mkdir -p /home/${USER}/.local/share/containers \
- && chown -R ${USER}:${USER} /home/${USER}
+ && mkdir -p /${USER}/.local/share/containers \
+ && chown -R ${USER}:${USER} /${USER}
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes
@@ -75,7 +75,7 @@ VOLUME /home/ops/.local/share/containers
 
 # set default user and workdir
 USER $USER
-WORKDIR /home/$USER
+WORKDIR /$USER
 
 # copy entrypoints
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh

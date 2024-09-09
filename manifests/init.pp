@@ -8,8 +8,8 @@ class hysds_base {
   # create groups and users
   #####################################################
   
-  $user = 'ops'
-  $group = 'ops'
+  $user = 'root'
+  $group = 'root'
   $conda_path = '/opt/conda'
 
   group { $group:
@@ -20,14 +20,14 @@ class hysds_base {
     ensure     => present,
     gid        => $group,
     shell      => '/bin/bash',
-    home       => "/home/$user",
+    home       => "/$user",
     managehome => true,
     require    => [
                    Group[$group],
                   ],
   }
 
-  file { "/home/$user":
+  file { "/$user":
     ensure  => directory,
     owner   => $user,
     group   => $group,
@@ -54,7 +54,7 @@ class hysds_base {
   }
   
   hysds_base::inputrc { $user:
-    home    => "/home/$user",
+    home    => "/$user",
     require => User[$user],
   }
 
@@ -97,7 +97,7 @@ class hysds_base {
   # install .bashrc
   #####################################################
 
-  file { "/home/$user/.bashrc":
+  file { "/$user/.bashrc":
     ensure  => present,
     content => template('hysds_base/bashrc'),
     owner   => $user,
@@ -106,11 +106,11 @@ class hysds_base {
     require => User[$user],
   }
 
-  file { "/root/.bashrc":
-    ensure  => present,
-    content => template('hysds_base/bashrc'),
-    mode    => "0600",
-  }
+ # file { "/root/.bashrc":
+ #   ensure  => present,
+ #   content => template('hysds_base/bashrc'),
+ #   mode    => "0600",
+ # }
 
 
   #####################################################
@@ -227,7 +227,7 @@ class hysds_base {
 
   exec { "clean_pip_cache":
     path    => ["/sbin", "/bin", "/usr/bin"],
-    command => "rm -rf /root/.cache /home/$user/.cache",
+    command => "rm -rf /root/.cache /$user/.cache",
   }
 
 

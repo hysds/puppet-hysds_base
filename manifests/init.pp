@@ -49,9 +49,9 @@ class hysds_base {
   # add .inputrc to users' home
   #####################################################
 
-  hysds_base::inputrc { 'root':
-    home => '/root',
-  }
+  #hysds_base::inputrc { 'root':
+  #  home => '/root',
+  #}
   
   hysds_base::inputrc { $user:
     home    => "/$user",

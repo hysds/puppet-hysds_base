@@ -22,7 +22,7 @@ class hysds_base {
     ensure     => present,
     gid        => $root_group,
     shell      => '/bin/bash',
-    home       => "/$user",
+    home       => "/$root_user",
     managehome => true,
     require    => [
                    Group[$root_group],
@@ -37,7 +37,7 @@ class hysds_base {
     require => User[$root_user],
   }
 
-  file { "/etc/sudoers.d/90-cloudimg-$user":
+  file { "/etc/sudoers.d/90-cloudimg-$root_user":
     ensure  => file,
     content  => template('hysds_base/90-cloudimg-user'),
     mode    => "0440",
@@ -69,7 +69,7 @@ class hysds_base {
     require => User[$ops_user],
   }
 
-  file { "/etc/sudoers.d/90-cloudimg-$user":
+  file { "/etc/sudoers.d/90-cloudimg-$ops_user":
     ensure  => file,
     content  => template('hysds_base/90-cloudimg-user'),
     mode    => "0440",

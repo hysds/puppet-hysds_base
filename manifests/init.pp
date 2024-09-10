@@ -39,7 +39,7 @@ class hysds_base {
 
   file { "/etc/sudoers.d/90-cloudimg-$root_user":
     ensure  => file,
-    content  => template('hysds_base/90-cloudimg-user'),
+    content  => template('hysds_base/90-cloudimg-root-user'),
     mode    => "0440",
     require => [
                 User[$root_user],
@@ -71,7 +71,7 @@ class hysds_base {
 
   file { "/etc/sudoers.d/90-cloudimg-$ops_user":
     ensure  => file,
-    content  => template('hysds_base/90-cloudimg-user'),
+    content  => template('hysds_base/90-cloudimg-ops-user'),
     mode    => "0440",
     require => [
                 User[$ops_user],

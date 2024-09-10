@@ -8,31 +8,33 @@ class hysds_base {
   # create groups and users
   #####################################################
   
-  $user = 'root'
-  $group = 'root'
+  $root_user = 'root'
+  $root_group = 'root'
+  $ops_user = 'ops'
+  $ops_group = 'ops'
   $conda_path = '/opt/conda'
 
-  group { $group:
+  group { $root_group:
     ensure     => present,
   }
 
-  user { $user:
+  user { $root_user:
     ensure     => present,
-    gid        => $group,
+    gid        => $root_group,
     shell      => '/bin/bash',
     home       => "/$user",
     managehome => true,
     require    => [
-                   Group[$group],
+                   Group[$root_group],
                   ],
   }
 
-  file { "/$user":
+  file { "/$root_user":
     ensure  => directory,
-    owner   => $user,
-    group   => $group,
+    owner   => $root_user,
+    group   => $root_group,
     mode    => "0755",
-    require => User[$user],
+    require => User[$root_user],
   }
 
   file { "/etc/sudoers.d/90-cloudimg-$user":
@@ -40,10 +42,41 @@ class hysds_base {
     content  => template('hysds_base/90-cloudimg-user'),
     mode    => "0440",
     require => [
-                User[$user],
+                User[$root_user],
                ],
   }
 
+  group { $ops_group:
+    ensure     => present,
+  }
+
+  user { $ops_user:
+    ensure     => present,
+    gid        => $ops_group,
+    shell      => '/bin/bash',
+    home       => "/home/$ops_user",
+    managehome => true,
+    require    => [
+                   Group[$ops_group],
+                  ],
+  }
+
+  file { "/home/$ops_user":
+    ensure  => directory,
+    owner   => $ops_user,
+    group   => $ops_group,
+    mode    => "0755",
+    require => User[$ops_user],
+  }
+
+  file { "/etc/sudoers.d/90-cloudimg-$user":
+    ensure  => file,
+    content  => template('hysds_base/90-cloudimg-user'),
+    mode    => "0440",
+    require => [
+                User[$ops_user],
+               ],
+  }
 
   #####################################################
   # add .inputrc to users' home
@@ -53,11 +86,15 @@ class hysds_base {
   #  home => '/root',
   #}
   
-  hysds_base::inputrc { $user:
-    home    => "/$user",
-    require => User[$user],
+  hysds_base::inputrc { $root_user:
+    home    => "/$root_user",
+    require => User[$root_user],
   }
 
+  hysds_base::inputrc { $ops_user:
+    home    => "/home/$ops_user",
+    require => User[$ops_user],
+  }
 
   #####################################################
   # change default user
@@ -65,11 +102,11 @@ class hysds_base {
 
   file_line { "default_user":
     ensure  => present,
-    line    => "    name: $user",
+    line    => "    name: $root_user",
     path    => "/etc/cloud/cloud.cfg",
     match   => "^    name:",
     require => [
-                User[$user],
+                User[$root_user],
                 Package['cloud-init'],
                ],
   }
@@ -97,13 +134,22 @@ class hysds_base {
   # install .bashrc
   #####################################################
 
-  file { "/$user/.bashrc":
+  file { "/$root_user/.bashrc":
     ensure  => present,
     content => template('hysds_base/bashrc'),
-    owner   => $user,
-    group   => $group,
+    owner   => $root_user,
+    group   => $root_group,
     mode    => "0644",
-    require => User[$user],
+    require => User[$root_user],
+  }
+
+  file { "/home/$ops_user/.bashrc":
+    ensure  => present,
+    content => template('hysds_base/bashrc'),
+    owner   => $ops_user,
+    group   => $ops_group,
+    mode    => "0644",
+    require => User[$ops_user],
   }
 
  # file { "/root/.bashrc":
@@ -215,8 +261,8 @@ class hysds_base {
   
   file { '/data':
     ensure  => directory,
-    owner   => $user,
-    group   => $group,
+    owner   => $ops_user,
+    group   => $ops_group,
     mode    => "0775",
   }
 
@@ -227,7 +273,7 @@ class hysds_base {
 
   exec { "clean_pip_cache":
     path    => ["/sbin", "/bin", "/usr/bin"],
-    command => "rm -rf /root/.cache /$user/.cache",
+    command => "rm -rf /$root_user/.cache /$root_user/.cache /home/$ops_user/.cache",
   }
 
 

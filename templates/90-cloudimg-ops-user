@@ -1,1 +1,1 @@
-<%= @root_user %> ALL=(ALL) NOPASSWD:ALL
+<%= @ops_user %> ALL=(ALL) NOPASSWD:ALL

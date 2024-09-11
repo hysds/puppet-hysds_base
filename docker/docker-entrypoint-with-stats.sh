@@ -21,6 +21,7 @@ fi
 
 # update ownership
 gosu 0:0 chown -R $UID:$GID $HOME 2>/dev/null || true
+
 if [ -e /var/run/docker.sock ]; then
   gosu 0:0 chown -R $UID:$GID /var/run/docker.sock 2>/dev/null || true
 else

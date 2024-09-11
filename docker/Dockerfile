@@ -83,6 +83,8 @@ WORKDIR /home/$OPS_GROUP
 USER $ROOT_USER
 WORKDIR /$ROOT_USER
 
+# softlink /root to /home/ops to maintain backwards compatability
+RUN rm -rf /home/ops && ln -s /root /home/ops
 
 # copy entrypoints
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh

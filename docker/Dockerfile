@@ -73,9 +73,9 @@ RUN set -ex \
 VOLUME /var/lib/containers
 VOLUME /root/.local/share/containers
 
-# set root user and workdir
-USER $ROOT_USER
-WORKDIR /$ROOT_USER
+# set default user and workdir
+USER $USER
+WORKDIR /$USER
 
 # copy entrypoints
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh

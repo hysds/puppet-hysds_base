@@ -8,73 +8,39 @@ class hysds_base {
   # create groups and users
   #####################################################
   
-  $root_user = 'root'
-  $root_group = 'root'
-  $ops_user = 'ops'
-  $ops_group = 'ops'
+  $user = 'root'
+  $group = 'root'
   $conda_path = '/opt/conda'
 
-  group { $root_group:
+  group { $group:
     ensure     => present,
   }
 
-  user { $root_user:
+  user { $user:
     ensure     => present,
-    gid        => $root_group,
+    gid        => $group,
     shell      => '/bin/bash',
-    home       => "/$root_user",
+    home       => "/$user",
     managehome => true,
     require    => [
-                   Group[$root_group],
+                   Group[$group],
                   ],
   }
 
-  file { "/$root_user":
+  file { "/$user":
     ensure  => directory,
-    owner   => $root_user,
-    group   => $root_group,
+    owner   => $user,
+    group   => $group,
     mode    => "0755",
-    require => User[$root_user],
+    require => User[$user],
   }
 
-  file { "/etc/sudoers.d/90-cloudimg-$root_user":
+  file { "/etc/sudoers.d/90-cloudimg-$user":
     ensure  => file,
-    content  => template('hysds_base/90-cloudimg-root-user'),
+    content  => template('hysds_base/90-cloudimg-user'),
     mode    => "0440",
     require => [
-                User[$root_user],
-               ],
-  }
-
-  group { $ops_group:
-    ensure     => present,
-  }
-
-  user { $ops_user:
-    ensure     => present,
-    gid        => $ops_group,
-    shell      => '/bin/bash',
-    home       => "/home/$ops_user",
-    managehome => true,
-    require    => [
-                   Group[$ops_group],
-                  ],
-  }
-
-  file { "/home/$ops_user":
-    ensure  => directory,
-    owner   => $ops_user,
-    group   => $ops_group,
-    mode    => "0755",
-    require => User[$ops_user],
-  }
-
-  file { "/etc/sudoers.d/90-cloudimg-$ops_user":
-    ensure  => file,
-    content  => template('hysds_base/90-cloudimg-ops-user'),
-    mode    => "0440",
-    require => [
-                User[$ops_user],
+                User[$user],
                ],
   }
 
@@ -82,18 +48,9 @@ class hysds_base {
   # add .inputrc to users' home
   #####################################################
 
-  #hysds_base::inputrc { 'root':
-  #  home => '/root',
-  #}
-  
-  hysds_base::inputrc { $root_user:
-    home    => "/$root_user",
-    require => User[$root_user],
-  }
-
-  hysds_base::inputrc { $ops_user:
-    home    => "/home/$ops_user",
-    require => User[$ops_user],
+  hysds_base::inputrc { $user:
+    home    => "/$user",
+    require => User[$user],
   }
 
   #####################################################
@@ -102,11 +59,11 @@ class hysds_base {
 
   file_line { "default_user":
     ensure  => present,
-    line    => "    name: $root_user",
+    line    => "    name: $user",
     path    => "/etc/cloud/cloud.cfg",
     match   => "^    name:",
     require => [
-                User[$root_user],
+                User[$user],
                 Package['cloud-init'],
                ],
   }
@@ -134,30 +91,14 @@ class hysds_base {
   # install .bashrc
   #####################################################
 
-  file { "/$root_user/.bashrc":
+  file { "/$user/.bashrc":
     ensure  => present,
     content => template('hysds_base/bashrc'),
-    owner   => $root_user,
-    group   => $root_group,
+    owner   => $user,
+    group   => $group,
     mode    => "0644",
-    require => User[$root_user],
+    require => User[$user],
   }
-
-  file { "/home/$ops_user/.bashrc":
-    ensure  => present,
-    content => template('hysds_base/bashrc'),
-    owner   => $ops_user,
-    group   => $ops_group,
-    mode    => "0644",
-    require => User[$ops_user],
-  }
-
- # file { "/root/.bashrc":
- #   ensure  => present,
- #   content => template('hysds_base/bashrc'),
- #   mode    => "0600",
- # }
-
 
   #####################################################
   # install packages
@@ -261,8 +202,8 @@ class hysds_base {
   
   file { '/data':
     ensure  => directory,
-    owner   => $ops_user,
-    group   => $ops_group,
+    owner   => $user,
+    group   => $group,
     mode    => "0775",
   }
 
@@ -273,7 +214,7 @@ class hysds_base {
 
   exec { "clean_pip_cache":
     path    => ["/sbin", "/bin", "/usr/bin"],
-    command => "rm -rf /$root_user/.cache /$root_user/.cache /home/$ops_user/.cache",
+    command => "rm -rf /$user/.cache /$user/.cache",
   }
 
 

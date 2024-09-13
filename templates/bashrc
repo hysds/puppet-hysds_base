@@ -2,12 +2,7 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# source conda base environment except if you're root
-#if ((${EUID:-0} || "$(id -u)")); then
-#  . <%= @conda_path %>/etc/profile.d/conda.sh
-#  conda activate base
-#  export LD_LIBRARY_PATH=<%= @conda_path %>/lib:/usr/lib:/usr/lib64:/usr/local/lib:$LD_LIBRARY_PATH
-#fi
+# source conda base environment
 . <%= @conda_path %>/etc/profile.d/conda.sh
 conda activate base
 export LD_LIBRARY_PATH=<%= @conda_path %>/lib:/usr/lib:/usr/lib64:/usr/local/lib:$LD_LIBRARY_PATH

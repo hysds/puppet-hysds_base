@@ -66,7 +66,7 @@ RUN set -ex \
  && chmod +x /docker-stats-on-exit-shim \
  && chmod u+s /docker-stats-on-exit-shim \
  && mkdir -p /${USER}/.local/share/containers \
- && chown -R ${USER}:${GROUP} /${ROOT_USER}
+ && chown -R ${USER}:${GROUP} /${USER}
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes

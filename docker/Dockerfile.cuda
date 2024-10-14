@@ -5,8 +5,8 @@ MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "CUDA Base HySDS image"
 
 # Set user and group
-ENV USER ops
-ENV GROUP ops
+ENV USER root
+ENV GROUP root
 
 # get org and branch
 ARG ORG
@@ -80,7 +80,7 @@ RUN dnf install -y \
 
 # set default user and workdir
 USER $USER
-WORKDIR /home/$USER
+WORKDIR /$USER
 
 # set default entrypoint
 ENTRYPOINT ["/docker-entrypoint.sh"]

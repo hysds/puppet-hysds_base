@@ -70,9 +70,11 @@ RUN set -ex \
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes
-#VOLUME /var/lib/containers
+VOLUME /var/lib/containers
 VOLUME /root/.local/share/containers
 
+# Remove this directory as it contains extended attributes
+RUN rm -rf /var/lib/containers/sigstore
 
 
 # set default user and workdir

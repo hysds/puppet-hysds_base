@@ -60,7 +60,6 @@ RUN set -ex \
  #&& gpg --verify /usr/local/bin/gosu.asc \
  && rm /usr/local/bin/gosu.asc \
  #&& rm -r /root/.gnupg/ \
- && rm -rf /var/lib/containers \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
@@ -71,8 +70,10 @@ RUN set -ex \
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes
-VOLUME /var/lib/containers
+#VOLUME /var/lib/containers
 VOLUME /root/.local/share/containers
+
+
 
 # set default user and workdir
 USER $USER

@@ -73,6 +73,10 @@ RUN set -ex \
 VOLUME /var/lib/containers
 VOLUME /root/.local/share/containers
 
+# Remove this directory as it contains extended attributes
+RUN rm -rf /var/lib/containers/sigstore
+
+
 # set default user and workdir
 USER $USER
 WORKDIR /$USER

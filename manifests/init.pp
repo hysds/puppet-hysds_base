@@ -151,11 +151,18 @@ class hysds_base {
     require => Hysds_base::Conda['pin'],
   }
 
+  hysds_base::conda { 'install':
+    path    => $conda_path,
+    action  => 'install',
+    args    => 'python=3.9 y',
+    require => Hysds_base::Conda['config_show_channel_urls'],
+  }
+
   hysds_base::conda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Hysds_base::Conda['config_show_channel_urls'],
+    require => Hysds_base::Conda['install'],
   }
 
   hysds_base::conda { 'packages':

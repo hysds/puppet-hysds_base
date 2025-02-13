@@ -141,34 +141,34 @@ class hysds_base {
   hysds_base::conda { 'pin':
     path    => $conda_path,
     action  => 'pin',
-    require => Hysds_base::conda["$conda_path"],
+    require => hysds_base::conda["$conda_path"],
   }
 
   hysds_base::conda { 'config_show_channel_urls':
     path    => $conda_path,
     action  => 'config',
     args    => '--set show_channel_urls True',
-    require => Hysds_base::conda['pin'],
+    require => hysds_base::conda['pin'],
   }
 
   hysds_base::conda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Hysds_base::conda['config_show_channel_urls'],
+    require => hysds_base::conda['config_show_channel_urls'],
   }
 
   hysds_base::conda { 'packages':
     path    => $conda_path,
     action  => 'install',
     args    => '-y virtualenv libxml2 libxslt cython cartopy future setuptools',
-    require => Hysds_base::conda['update_all'],
+    require => hysds_base::conda['update_all'],
   }
 
   hysds_base::conda { 'clean':
     path    => $conda_path,
     action  => 'clean',
-    require => Hysds_base::conda['packages'],
+    require => hysds_base::conda['packages'],
   }
   
 
@@ -226,7 +226,7 @@ class hysds_base {
     provider => rpm,
     ensure   => present,
     source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::conda['clean'],
+    require  => hysds_base::conda['clean'],
     notify   => Exec['ldconfig'],
   }
 
@@ -243,7 +243,7 @@ class hysds_base {
     wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_x86_64.whl',
     ensure  => installed,
     require => [
-                Hysds_base::Pip['bsddb3'],
+                hysds_base::pip['bsddb3'],
                ],
     notify => Exec['clean_pip_cache'],
   }

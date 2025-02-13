@@ -1,23 +1,21 @@
-define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args='') {
+define hysds_base::conda($path='/opt/conda', $action=install_miniforge, $args='') {
   case $action {
-    install_miniconda: {
-      exec { "install_anaconda":
+    install_miniforge: {
+      exec { "install_conda":
         path    => "/usr/local/bin:/usr/bin:/bin",
-        command => "/tmp/miniconda.sh -b -p $path",
+        command => "/tmp/miniforge.sh -b -p $path",
         creates => $path,
-        require => File["/tmp/miniconda.sh"],
+        require => File["/tmp/miniforge.sh"],
         notify  => Exec["remove_installer"],
       }
 
       exec { "download_installer":
         path    => "/usr/local/bin:/usr/bin:/bin",
-        # command => "curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh",
-        # Pinning to python 3.9 until we can vett the later versions
-        command => "curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-py39_22.11.1-1-Linux-x86_64.sh -o /tmp/miniconda.sh",
-        creates => "/tmp/miniconda.sh",
+        command => "curl -sSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o /tmp/miniforge.sh",
+        creates => "/tmp/miniforge.sh",
       }
 
-      file { "/tmp/miniconda.sh":
+      file { "/tmp/miniforge.sh":
         ensure => present,
         mode   => "0755",
         require => Exec["download_installer"],
@@ -25,7 +23,7 @@ define hysds_base::anaconda($path='/opt/conda', $action=install_miniconda, $args
 
       exec { "remove_installer":
         path    => "/usr/local/bin:/usr/bin:/bin",
-        command => "rm -rf /tmp/miniconda.sh",
+        command => "rm -rf /tmp/miniforge.sh",
       }
     }
 

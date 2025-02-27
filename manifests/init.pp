@@ -147,45 +147,52 @@ class hysds_base {
 
 
   #####################################################
-  # install anaconda
+  # install conda
   #####################################################
 
-  hysds_base::anaconda { "$conda_path":
+  hysds_base::conda { "$conda_path":
     path    => $conda_path,
-    action  => 'install_miniconda',
+    action  => 'install_miniforge',
   }
 
-  hysds_base::anaconda { 'pin':
+  hysds_base::conda { 'pin':
     path    => $conda_path,
     action  => 'pin',
-    require => Hysds_base::Anaconda["$conda_path"],
+    require => Hysds_base::Conda["$conda_path"],
   }
 
-  hysds_base::anaconda { 'config_show_channel_urls':
+  hysds_base::conda { 'config_show_channel_urls':
     path    => $conda_path,
     action  => 'config',
     args    => '--set show_channel_urls True',
-    require => Hysds_base::Anaconda['pin'],
+    require => Hysds_base::Conda['pin'],
   }
 
-  hysds_base::anaconda { 'update_all':
+  hysds_base::conda { 'install':
+    path    => $conda_path,
+    action  => 'install',
+    args    => 'python=3.9.19 -y',
+    require => Hysds_base::Conda['config_show_channel_urls'],
+  }
+
+  hysds_base::conda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Hysds_base::Anaconda['config_show_channel_urls'],
+    require => Hysds_base::Conda['install'],
   }
 
-  hysds_base::anaconda { 'packages':
+  hysds_base::conda { 'packages':
     path    => $conda_path,
     action  => 'install',
     args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
     require => Hysds_base::Anaconda['update_all'],
   }
 
-  hysds_base::anaconda { 'clean':
+  hysds_base::conda { 'clean':
     path    => $conda_path,
     action  => 'clean',
-    require => Hysds_base::Anaconda['packages'],
+    require => Hysds_base::Conda['packages'],
   }
   
 
@@ -250,7 +257,7 @@ class hysds_base {
     provider => rpm,
     ensure   => present,
     source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::Anaconda['clean'],
+    require  => Hysds_base::Conda['clean'],
     notify   => Exec['ldconfig'],
   }
 

@@ -186,7 +186,7 @@ class hysds_base {
     path    => $conda_path,
     action  => 'install',
     args    => '-y virtualenv libxml2 libxslt cython cartopy future "setuptools"',
-    require => Hysds_base::Anaconda['update_all'],
+    require => Hysds_base::Conda['update_all'],
   }
 
   hysds_base::conda { 'clean':

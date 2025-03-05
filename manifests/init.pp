@@ -238,7 +238,7 @@ class hysds_base {
 
   hysds_base::pip { [ 'docker-compose' ]:
     ensure => latest,
-    require => Hysds_base::Anaconda['clean'],
+    require => Hysds_base::Conda['clean'],
     notify => Exec['clean_pip_cache'],
   }
 

@@ -1,4 +1,4 @@
-FROM oraclelinux:8
+FROM hysds/jplsds-oraclelinux:latest
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"

@@ -154,7 +154,7 @@ class hysds_base {
   hysds_base::conda { 'install':
     path    => $conda_path,
     action  => 'install',
-    args    => 'python=3.9 -y',
+    args    => 'python -y',
     require => Hysds_base::Conda['config_show_channel_urls'],
   }
 

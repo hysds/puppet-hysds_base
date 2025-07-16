@@ -11,7 +11,7 @@ define hysds_base::conda($path='/opt/conda', $action=install_miniforge, $args=''
 
       exec { "download_installer":
         path    => "/usr/local/bin:/usr/bin:/bin",
-        command => "curl -sSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o /tmp/miniforge.sh",
+        command => "curl -sSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o /tmp/miniforge.sh",
         creates => "/tmp/miniforge.sh",
       }
 

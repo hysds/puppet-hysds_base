@@ -28,6 +28,11 @@ define hysds_base::conda($path='/opt/conda', $action=install_miniforge, $args=''
     }
 
     pin: {
+      exec { "mkdir -p ${path}/conda-meta":
+        path    => "/usr/local/bin:/usr/bin:/bin",
+        creates => inline_template("${path}/conda-meta"),
+      }
+
       exec { "touch ${path}/conda-meta/pinned":
         path    => "/usr/local/bin:/usr/bin:/bin",
         creates => inline_template("${path}/conda-meta/pinned"),

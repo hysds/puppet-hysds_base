@@ -56,9 +56,9 @@ RUN rm -rf /var/cache/dnf
  #   done \
 RUN curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" 
 RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" 
-RUN gpg --verify /usr/local/bin/gosu.asc 
+#RUN gpg --verify /usr/local/bin/gosu.asc 
 RUN rm /usr/local/bin/gosu.asc 
-RUN rm -r /root/.gnupg/ 
+#RUN rm -r /root/.gnupg/ 
 RUN chmod +x /usr/local/bin/gosu 
 RUN chmod u+s /usr/local/bin/gosu 
 RUN curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" 

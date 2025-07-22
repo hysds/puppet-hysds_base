@@ -55,9 +55,9 @@ RUN rm -rf /var/cache/dnf
  #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
  #   done \
 RUN curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-arm64" 
-RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-arm64.asc" 
-RUN gpg --verify /usr/local/bin/gosu.asc 
-RUN rm /usr/local/bin/gosu.asc 
+#RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-arm64.asc" 
+#RUN gpg --verify /usr/local/bin/gosu.asc 
+#RUN rm /usr/local/bin/gosu.asc 
 RUN rm -r /root/.gnupg/ 
 RUN chmod +x /usr/local/bin/gosu 
 RUN chmod u+s /usr/local/bin/gosu 

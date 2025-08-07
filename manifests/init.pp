@@ -238,7 +238,7 @@ class hysds_base {
   }
 
   hysds_base::pip { 'bsddb3':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp39-cp39-linux_aarch64.whl',
+    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp312-cp312-linux_aarch64.whl',
     ensure  => installed,
     require => [
                 Package['dbxml'],
@@ -247,7 +247,7 @@ class hysds_base {
   }
 
   hysds_base::pip { 'dbxml':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp39-cp39-linux_aarch64.whl',
+    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-cp312-cp312-linux_aarch64.whl',
     ensure  => installed,
     require => [
                 Hysds_base::Pip['bsddb3'],

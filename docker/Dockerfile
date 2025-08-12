@@ -29,6 +29,7 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 
 # provision via puppet
 RUN set -ex \
+ && microdnf install dnf \
  && dnf install -y oracle-epel-release-el8 \
  && dnf install podman \
  && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \

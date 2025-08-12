@@ -31,11 +31,11 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 RUN set -ex \
  && microdnf install dnf \
  && dnf install -y oracle-epel-release-el8 \
- && dnf install podman \
+ && dnf install -y podman \
  && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
  && dnf config-manager --set-disabled docker-ce-stable \
  && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm \
- && dnf install --enablerepo=docker-ce-stable docker-ce --nobest \
+ && dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest \
  && dnf update -y \
  && dnf install -y \
     puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \

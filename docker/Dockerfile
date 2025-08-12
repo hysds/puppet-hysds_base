@@ -28,24 +28,24 @@ ENV GIT_URL https://github.com/${ORG}/puppet-hysds_base/raw/${BRANCH}/install.sh
 ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANCH} version.json
 
 # provision via puppet
-RUN set -ex
-RUN microdnf install dnf
-RUN dnf install -y oracle-epel-release-el8
-RUN dnf install -y podman
-RUN dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-RUN dnf config-manager --set-disabled docker-ce-stable
-RUN rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm
-RUN dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest
-RUN dnf update -y
-RUN dnf install -y oraclelinux-developer-release-el8
-RUN dnf install -y puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname
-RUN curl -skL ${GIT_URL} > /tmp/install.sh
-RUN chmod 755 /tmp/install.sh
-RUN /tmp/install.sh ${ORG} ${BRANCH}
-RUN rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile
-RUN dnf clean all
-RUN rm -f /tmp/install.sh
-RUN rm -rf /var/cache/dnf
+RUN set -ex \
+ && microdnf install dnf \
+ && dnf install -y oracle-epel-release-el8 \
+ && dnf install -y podman \
+ && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
+ && dnf config-manager --set-disabled docker-ce-stable \
+ && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm \
+ && dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest \
+ && dnf update -y \
+ && dnf install -y oraclelinux-developer-release-el8 \
+ && dnf install -y puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
+ && curl -skL ${GIT_URL} > /tmp/install.sh \
+ && chmod 755 /tmp/install.sh \
+ && /tmp/install.sh ${ORG} ${BRANCH} \
+ && rm -rf /etc/puppetlabs/code/modules/* /mnt/swapfile \
+ && dnf clean all \
+ && rm -f /tmp/install.sh \
+ && rm -rf /var/cache/dnf \
  # Commenting out for now as we are consistently getting
  # the following error: gpg: keyserver receive failed: Server indicated a failure
  # && for server in ha.pool.sks-keyservers.net \
@@ -56,18 +56,18 @@ RUN rm -rf /var/cache/dnf
  #     pgp.mit.edu; do \
  #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
  #   done \
-RUN curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64"
-RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc"
-RUN gpg --verify /usr/local/bin/gosu.asc
-RUN rm /usr/local/bin/gosu.asc
-RUN rm -r /root/.gnupg/
-RUN chmod +x /usr/local/bin/gosu
-RUN chmod u+s /usr/local/bin/gosu
-RUN curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim"
-RUN chmod +x /docker-stats-on-exit-shim
-RUN chmod u+s /docker-stats-on-exit-shim
-RUN mkdir -p /${USER}/.local/share/containers
-RUN chown -R ${USER}:${GROUP} /${USER}
+ && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
+#RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc"
+#RUN gpg --verify /usr/local/bin/gosu.asc
+#RUN rm /usr/local/bin/gosu.asc
+#RUN rm -r /root/.gnupg/
+ && chmod +x /usr/local/bin/gosu \
+ && chmod u+s /usr/local/bin/gosu \
+ && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
+ && chmod +x /docker-stats-on-exit-shim \
+ && chmod u+s /docker-stats-on-exit-shim \
+ && mkdir -p /${USER}/.local/share/containers \
+ && chown -R ${USER}:${GROUP} /${USER}
 
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes

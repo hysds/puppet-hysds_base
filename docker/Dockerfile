@@ -37,6 +37,7 @@ RUN dnf config-manager --set-disabled docker-ce-stable
 RUN rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm
 RUN dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest
 RUN dnf update -y
+RUN dnf install -y oraclelinux-developer-release-el8
 RUN dnf install -y puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname
 RUN curl -skL ${GIT_URL} > /tmp/install.sh
 RUN chmod 755 /tmp/install.sh

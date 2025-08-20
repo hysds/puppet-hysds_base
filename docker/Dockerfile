@@ -2,7 +2,7 @@
 # Using custom oraclelinux image with /dev removed
 # This supports loading these containers using podman with
 # an NFS backend
-FROM hysds/jpl-oraclelinux:8.10.240619
+FROM hysds/jplsds-oraclelinux:8.10-slim.latest
 
 MAINTAINER Gerald Manipon (pymonger) "pymonger@gmail.com"
 LABEL description "Base HySDS image"
@@ -29,15 +29,16 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 
 # provision via puppet
 RUN set -ex \
+ && microdnf install dnf \
  && dnf install -y oracle-epel-release-el8 \
- && dnf install podman \
+ && dnf install -y podman \
  && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
  && dnf config-manager --set-disabled docker-ce-stable \
  && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm \
- && dnf install --enablerepo=docker-ce-stable docker-ce --nobest \
+ && dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest \
  && dnf update -y \
- && dnf install -y \
-    puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
+ && dnf install -y oraclelinux-developer-release-el8 \
+ && dnf install -y puppet wget curl git sudo 'dnf-command(config-manager)' which tar hostname \
  && curl -skL ${GIT_URL} > /tmp/install.sh \
  && chmod 755 /tmp/install.sh \
  && /tmp/install.sh ${ORG} ${BRANCH} \
@@ -56,10 +57,13 @@ RUN set -ex \
  #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
  #   done \
  && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
- && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
- #&& gpg --verify /usr/local/bin/gosu.asc \
- && rm /usr/local/bin/gosu.asc \
- #&& rm -r /root/.gnupg/ \
+ # Commenting this out for now. Validation was causing build problems
+ # when swapping over to slim image and this check isn't critical. Leaving
+ # block commented for future reference in case we want to add it back in.
+ # && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
+ # && gpg --verify /usr/local/bin/gosu.asc \
+ # && rm /usr/local/bin/gosu.asc \
+ # && rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \

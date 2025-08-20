@@ -57,10 +57,13 @@ RUN set -ex \
  #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
  #   done \
  && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
-#RUN curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc"
-#RUN gpg --verify /usr/local/bin/gosu.asc
-#RUN rm /usr/local/bin/gosu.asc
-#RUN rm -r /root/.gnupg/
+ # Commenting this out for now. Validation was causing build problems
+ # when swapping over to slim image and this check isn't critical. Leaving
+ # block commented for future reference in case we want to add it back in.
+ # && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
+ # && gpg --verify /usr/local/bin/gosu.asc \
+ # && rm /usr/local/bin/gosu.asc \
+ # && rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \

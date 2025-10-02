@@ -158,11 +158,18 @@ class hysds_base {
     require => Hysds_base::Conda['config_show_channel_urls'],
   }
 
+  hysds_base::conda { 'sync_conda_solver':
+    path    => $conda_path,
+    action  => 'install', # Using 'install' here also works for updating specific packages
+    args    => 'conda conda-libmamba-solver -y --solver=classic',
+    require => Hysds_base::Conda['install'],
+  }
+
   hysds_base::conda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Hysds_base::Conda['install'],
+    require => Hysds_base::Conda['sync_conda_solver'],
   }
 
   hysds_base::conda { 'packages':

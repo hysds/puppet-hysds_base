@@ -233,33 +233,9 @@ class hysds_base {
 
 
   #####################################################
-  # install home baked packages for sciflo and hysds
+  # Legacy packages removed (bsddb3, dbxml)
+  # These were not used in the codebase and have been removed
+  # to simplify multi-platform builds
   #####################################################
-
-  package { 'dbxml':
-    provider => rpm,
-    ensure   => present,
-    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::Conda['clean'],
-    notify   => Exec['ldconfig'],
-  }
-
-  hysds_base::pip { 'bsddb3':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp312-cp312-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Package['dbxml'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
-
-  hysds_base::pip { 'dbxml':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.5-cp312-cp312-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Hysds_base::Pip['bsddb3'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
 
 }

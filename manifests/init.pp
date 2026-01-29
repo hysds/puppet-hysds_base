@@ -233,9 +233,12 @@ class hysds_base {
 
 
   #####################################################
-  # Legacy packages removed (bsddb3, dbxml)
-  # These were not used in the codebase and have been removed
-  # to simplify multi-platform builds
+  # SciFlo optional dependencies (bsddb3, dbxml)
+  # Imports wrapped in try/except in sciflo code.
+  # SciFlo will work without them with graceful degradation:
+  # - PersistentDict caching disabled (minor performance impact)
+  # - XQuery work units unavailable (rarely used)
+  # Not installed to support multi-architecture builds.
   #####################################################
 
 }

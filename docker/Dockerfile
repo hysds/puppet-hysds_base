@@ -75,8 +75,15 @@ RUN set -ex \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
  # Download docker-stats-on-exit-shim for the target architecture
- && SHIM_ARCH="$(uname -m | sed 's/x86_64/amd64/g' | sed 's/aarch64/arm64/g')" \
- && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim-${SHIM_ARCH}" \
+ && ARCH="$(uname -m)" \
+ && if [ "$ARCH" = "x86_64" ]; then \
+      SHIM_BINARY="docker-stats-on-exit-shim"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+      SHIM_BINARY="docker-stats-on-exit-shim-arm64"; \
+    else \
+      echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi \
+ && curl -fSL -o /docker-stats-on-exit-shim "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/${SHIM_BINARY}" \
  && chmod +x /docker-stats-on-exit-shim \
  && chmod u+s /docker-stats-on-exit-shim \
  && mkdir -p /${USER}/.local/share/containers \

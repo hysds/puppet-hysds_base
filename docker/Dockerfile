@@ -34,7 +34,13 @@ RUN set -ex \
  && dnf install -y podman \
  && dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo \
  && dnf config-manager --set-disabled docker-ce-stable \
- && rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm \
+ # Install containerd.io based on architecture
+ && ARCH="$(uname -m)" \
+ && if [ "$ARCH" = "x86_64" ]; then \
+      rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.32-3.1.el8.x86_64.rpm; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+      rpm --install --nodeps --replacefiles --excludepath=/usr/bin/runc https://download.docker.com/linux/centos/8/aarch64/stable/Packages/containerd.io-1.6.32-3.1.el8.aarch64.rpm; \
+    fi \
  && dnf install -y --enablerepo=docker-ce-stable docker-ce --nobest \
  && dnf update -y \
  && dnf install -y oraclelinux-developer-release-el8 \
@@ -56,17 +62,28 @@ RUN set -ex \
  #     pgp.mit.edu; do \
  #     gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || : ; \
  #   done \
- && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64" \
+ # Download gosu for the target architecture
+ && GOSU_ARCH="$(uname -m | sed 's/x86_64/amd64/g' | sed 's/aarch64/arm64/g')" \
+ && curl -o /usr/local/bin/gosu -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-${GOSU_ARCH}" \
  # Commenting this out for now. Validation was causing build problems
  # when swapping over to slim image and this check isn't critical. Leaving
  # block commented for future reference in case we want to add it back in.
- # && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-amd64.asc" \
+ # && curl -o /usr/local/bin/gosu.asc -SL "https://github.com/hysds/gosu/releases/download/${GOSU_VERSION}/gosu-${GOSU_ARCH}.asc" \
  # && gpg --verify /usr/local/bin/gosu.asc \
  # && rm /usr/local/bin/gosu.asc \
  # && rm -r /root/.gnupg/ \
  && chmod +x /usr/local/bin/gosu \
  && chmod u+s /usr/local/bin/gosu \
- && curl -o /docker-stats-on-exit-shim -SL "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/docker-stats-on-exit-shim" \
+ # Download docker-stats-on-exit-shim for the target architecture
+ && ARCH="$(uname -m)" \
+ && if [ "$ARCH" = "x86_64" ]; then \
+      SHIM_BINARY="docker-stats-on-exit-shim"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+      SHIM_BINARY="docker-stats-on-exit-shim-arm64"; \
+    else \
+      echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi \
+ && curl -fSL -o /docker-stats-on-exit-shim "https://github.com/hysds/docker-stats-on-exit-shim/releases/download/${DSOES_VERSION}/${SHIM_BINARY}" \
  && chmod +x /docker-stats-on-exit-shim \
  && chmod u+s /docker-stats-on-exit-shim \
  && mkdir -p /${USER}/.local/share/containers \

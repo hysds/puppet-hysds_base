@@ -233,33 +233,12 @@ class hysds_base {
 
 
   #####################################################
-  # install home baked packages for sciflo and hysds
+  # SciFlo optional dependencies (bsddb3, dbxml)
+  # Imports wrapped in try/except in sciflo code.
+  # SciFlo will work without them with graceful degradation:
+  # - PersistentDict caching disabled (minor performance impact)
+  # - XQuery work units unavailable (rarely used)
+  # Not installed to support multi-architecture builds.
   #####################################################
-
-  package { 'dbxml':
-    provider => rpm,
-    ensure   => present,
-    source   => "/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.4-1.x86_64.rpm",
-    require  => Hysds_base::Conda['clean'],
-    notify   => Exec['ldconfig'],
-  }
-
-  hysds_base::pip { 'bsddb3':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/bsddb3-6.2.1-cp312-cp312-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Package['dbxml'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
-
-  hysds_base::pip { 'dbxml':
-    wheel   => '/etc/puppetlabs/code/modules/hysds_base/files/dbxml-6.1.5-cp312-cp312-linux_x86_64.whl',
-    ensure  => installed,
-    require => [
-                Hysds_base::Pip['bsddb3'],
-               ],
-    notify => Exec['clean_pip_cache'],
-  }
 
 }

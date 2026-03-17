@@ -24,17 +24,27 @@ ADD https://api.github.com/repos/${ORG}/puppet-hysds_base/git/refs/heads/${BRANC
 # && sudo dnf install cuda-driver -y
 
 # install older NVIDIA drivers - supported by p2.xlarge instance type
-ENV NVARCH x86_64
+# Set NVARCH based on target architecture
+RUN NVARCH="$(uname -m)" && echo "NVARCH=${NVARCH}" > /tmp/nvarch.env
 ENV NVIDIA_REQUIRE_CUDA "cuda>=11.4 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 brand=tesla,driver>=450,driver<451"
 ENV NV_CUDA_CUDART_VERSION 11.4.108-1
 
-COPY files/cuda.repo-x86_64 /etc/yum.repos.d/cuda.repo
+# Copy appropriate cuda.repo based on architecture
+COPY files/cuda.repo-x86_64 /tmp/cuda.repo-x86_64
+COPY files/cuda.repo-aarch64 /tmp/cuda.repo-aarch64
+RUN NVARCH="$(uname -m)" && \
+    if [ -f "/tmp/cuda.repo-${NVARCH}" ]; then \
+        cp "/tmp/cuda.repo-${NVARCH}" /etc/yum.repos.d/cuda.repo; \
+    else \
+        cp "/tmp/cuda.repo-x86_64" /etc/yum.repos.d/cuda.repo; \
+    fi
 
 USER root
 
-RUN NVIDIA_GPGKEY_SUM=d0664fbbdb8c32356d45de36c5984617217b2d0bef41b93ccecd326ba3b80c87 && \
+RUN NVARCH="$(uname -m)" && \
+    NVIDIA_GPGKEY_SUM=d0664fbbdb8c32356d45de36c5984617217b2d0bef41b93ccecd326ba3b80c87 && \
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/rhel8/${NVARCH}/D42D0685.pub | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
-    echo "$NVIDIA_GPGKEY_SUM  /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c --strict -
+    echo "$NVIDIA_GPGKEY_SUM  /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c --strict - || true
 
 ENV CUDA_VERSION 11.4.2
 

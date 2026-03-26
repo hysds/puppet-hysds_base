@@ -11,7 +11,7 @@ LABEL description "Base HySDS image"
 ENV GOSU_VERSION 1.10
 
 # Set docker-stats-on-exit-shim version
-ENV DSOES_VERSION v1.0
+ENV DSOES_VERSION v2.0
 
 # Set user and group
 ENV USER root

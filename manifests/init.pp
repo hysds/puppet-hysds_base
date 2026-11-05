@@ -151,25 +151,23 @@ class hysds_base {
     require => Hysds_base::Conda['pin'],
   }
 
+  # Downgrade python and update conda and its solver in ONE transaction, so the
+  # libmamba solver picks py312 builds of conda, conda-libmamba-solver and
+  # libmambapy together. Downgrading python alone leaves libmambapy built for the
+  # installer's newer python; conda then falls back to the classic solver, which
+  # needs ~15 min to solve conda against conda-forge.
   hysds_base::conda { 'install':
     path    => $conda_path,
     action  => 'install',
-    args    => 'python=3.12 -y',
+    args    => 'python=3.12 conda conda-libmamba-solver -y',
     require => Hysds_base::Conda['config_show_channel_urls'],
-  }
-
-  hysds_base::conda { 'sync_conda_solver':
-    path    => $conda_path,
-    action  => 'install', # Using 'install' here also works for updating specific packages
-    args    => 'conda conda-libmamba-solver -y --solver=classic',
-    require => Hysds_base::Conda['install'],
   }
 
   hysds_base::conda { 'update_all':
     path    => $conda_path,
     action  => 'update',
     args    => '--all -y',
-    require => Hysds_base::Conda['sync_conda_solver'],
+    require => Hysds_base::Conda['install'],
   }
 
   hysds_base::conda { 'packages':

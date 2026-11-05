@@ -53,6 +53,7 @@ define hysds_base::conda($path='/opt/conda', $action=install_miniforge, $args=''
     install: {
       exec { "conda install $args":
         path    => "${path}/bin:/usr/local/bin:/usr/bin:/bin",
+        timeout => 3600,
       }
     }
 

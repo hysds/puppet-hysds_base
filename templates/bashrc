@@ -5,7 +5,10 @@
 # source conda base environment
 . <%= @conda_path %>/etc/profile.d/conda.sh
 conda activate base
-export LD_LIBRARY_PATH=<%= @conda_path %>/lib:/usr/lib:/usr/lib64:/usr/local/lib:$LD_LIBRARY_PATH
+# Don't put <%= @conda_path %>/lib on LD_LIBRARY_PATH: conda binaries already find their libraries
+# through their own RPATH, and exporting it makes OS binaries load conda's copies instead of the OS
+# ones (e.g. OS git picking up conda-forge libcurl 8.23.0, which drops the credentials embedded in a
+# clone URL, so token-in-URL clones of private repos stop at a username prompt).
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
